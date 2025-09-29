@@ -1,2 +1,3 @@
 # PadelNotes
-PadelNotes is a project built on the idea of getting better at padel and having guidance through the use of AI
+
+PadelNotes is a project designed to help players improve their padel game by combining structured feedback with the use of AI.

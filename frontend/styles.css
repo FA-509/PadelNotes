@@ -1,0 +1,133 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  height: 100%;
+  margin: 0;
+}
+
+.logo {
+  cursor: pointer;
+  width: 80px;
+  height: auto;
+}
+
+.main-image {
+  border-radius: 5%;
+  min-height: 100%;
+  width: 100%;
+}
+
+.trydemo-button {
+  font-family: "Inter", sans-serif;
+  border: 1px solid black;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: white;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+}
+
+.leftside {
+  display: flex;
+  align-items: center;
+}
+
+.leftside h2 {
+  display: flex;
+  align-items: center;
+  font-family: "Inter", sans-serif;
+
+  cursor: pointer;
+}
+
+.center {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+.center ul {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  font-family: "Inter", sans-serif;
+}
+
+.center li {
+  list-style: none;
+  display: inline-block;
+}
+
+.center a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+.rightside ul {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-right: 40px;
+  font-family: "Inter", sans-serif;
+}
+
+.rightside li {
+  display: inline-block;
+}
+
+.rightside a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+.importagame {
+  font-family: "Inter", sans-serif;
+  border: 1px solid black;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: white;
+  position: absolute;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.importagame-form {
+  /* Change Display back to None  */
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.importagame-form label {
+  display: inline-block;
+}
+
+/* .importagame-form.open {
+  display: flex;
+  flex-direction: column;
+} */

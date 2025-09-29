@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Figure what this is? -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>PadelNotes</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <header>
+      <div class="leftside">
+        <img class="logo" src="images/padelnotes logo.svg" alt="logo" />
+        <h2>PadelNotes</h2>
+      </div>
+      <div class="center">
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="rightside">
+        <ul>
+          <li><a href="#">Sign in</a></li>
+          <li>
+            <a class="trydemo-button" href="#">Try Demo</a>
+          </li>
+        </ul>
+      </div>
+    </header>
+    <!-- Main Section -->
+    <main class="main"></main>
+    <button class="importagame" id="importagame">Import a Game</button>
+    <!-- Import a Game Form -->
+    <div class="importagame-form" id="importagame-form">
+      <h2>Import a Game</h2>
+      <form>
+        <div class="form-row">
+          <label for="date">Date Game was Played:</label>
+          <input type="date" value="29/11/2025" />
+        </div>
+        <div class="form-row"
+          <label for="time">Time Game was Played</label>
+          <input type="time"/>
+        </div>
+        <div class="form-row">
+          <label for="duration">Duration:</label>
+          <select name="duration" id="duration">
+          <option value="60">60m</option>
+          <option value="90">90m</option>
+          <option value="120">120m</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="location">Location:</label>
+          <input type="text"/>
+          </div>
+
+
+          <div class="form-row">
+          <label for="match-type">Match Type:</label>
+          <select name="matchtype" id="matchtype">
+          <option value="type">Friendly</option>
+          <option value="type">Competitive</option>
+          </select>
+        </div>
+        <div class="form-row"></div>
+
+        <div class="form-row">
+          <label for="">Team A:</label>
+          <input type="text">
+          <input type="text">
+
+        </div>
+
+                <div class="form-row">
+          <label for="">Team B:</label>
+          <input type="text">
+          <input type="text">
+        </div>
+        
+        <input type="submit">
+
+
+      </form>
+
+      <button class="close-button" id="close-button">Close</button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
