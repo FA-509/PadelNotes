@@ -38,14 +38,14 @@
     <!-- Import a Game Form -->
     <div class="importagame-form" id="importagame-form">
       <h2>Import a Game</h2>
-      <form>
+      <form id="importagameform">
         <div class="form-row">
           <label for="date">Date Game was Played:</label>
-          <input type="date" value="29/11/2025" />
+          <input name="date" type="date" value="29/11/2025" />
         </div>
         <div class="form-row"
           <label for="time">Time Game was Played</label>
-          <input type="time"/>
+          <input name="time" type="time"/>
         </div>
         <div class="form-row">
           <label for="duration">Duration:</label>
@@ -57,7 +57,7 @@
         </div>
         <div class="form-row">
           <label for="location">Location:</label>
-          <input type="text"/>
+          <input name="location" type="text"/>
           </div>
 
 
@@ -68,25 +68,46 @@
           <option value="type">Competitive</option>
           </select>
         </div>
-        <div class="form-row"></div>
 
         <div class="form-row">
           <label for="">Team A:</label>
-          <input type="text">
-          <input type="text">
+          <input name="teama-player1" type="text">
+          <input name="teama-player2" type="text">
 
         </div>
 
-                <div class="form-row">
+        <div class="form-row">
           <label for="">Team B:</label>
-          <input type="text">
-          <input type="text">
+          <input name="teamb-player1" type="text">
+          <input name="teamb-player2" type="text">
         </div>
-        
-        <input type="submit">
 
+        <table>
+          <tr>
+          <th>Team</th>
+          <th>Set-1</th>
+          <th>Set-2</th>
+          <th>Set-3</th>
+          </tr>
+          <tr>
+            <td>A</td>
+            <td><input type="number" name="set1-scorea"></td>
+            <td><input type="number" name="set2-scorea"></td>
+            <td><input type="number" name="set3-scorea"></td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td><input type="number" name="set1-scoreb"></td>
+            <td><input type="number" name="set2-scoreb"></td>
+            <td><input type="number" name="set3-scoreb"></td>
+          </tr>
+        </table>
+
+      <button id="submit_button" type="submit">Submit</button>
 
       </form>
+
+
 
       <button class="close-button" id="close-button">Close</button>
     </div>

@@ -111,8 +111,7 @@ header {
 }
 
 .importagame-form {
-  /* Change Display back to None  */
-  display: flex;
+  display: none;
   flex-direction: column;
   position: fixed;
   top: 0;
@@ -127,7 +126,7 @@ header {
   display: inline-block;
 }
 
-/* .importagame-form.open {
+.importagame-form.open {
   display: flex;
   flex-direction: column;
-} */
+}
