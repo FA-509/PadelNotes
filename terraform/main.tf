@@ -1,0 +1,122 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "4.47.0"
+
+    }
+  }
+}
+
+provider "azurerm" {
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
+subscription_id = "12ce2e00-9ed1-4fb6-8bfc-03b9bd0a200a"
+
+}
+
+resource "azurerm_resource_group" "PadelNotes-rg" {
+  name     = "PadelNotes2"
+  location = "UK South"
+}
+
+resource "azurerm_storage_account" "functionapp-storageaccount" {
+  name                     = "functionappsa01"
+  resource_group_name      = azurerm_resource_group.PadelNotes-rg.name
+  location                 = azurerm_resource_group.PadelNotes-rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_service_plan" "functionapp-serviceplan" {
+  name                = "functionappserviceplan"
+  resource_group_name = azurerm_resource_group.PadelNotes-rg.name
+  location            = azurerm_resource_group.PadelNotes-rg.location
+  os_type             = "Linux"
+  sku_name            = "Y1"
+}
+
+resource "azurerm_log_analytics_workspace" "log-workspace" {
+  name                = "padelnotes-workspacelogs"
+  location            = azurerm_resource_group.PadelNotes-rg.location
+  resource_group_name = azurerm_resource_group.PadelNotes-rg.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+resource "azurerm_application_insights" "functionapp-appinsights" {
+  name                = "functionapp-appinsights"
+  location            = azurerm_resource_group.PadelNotes-rg.location
+  resource_group_name = azurerm_resource_group.PadelNotes-rg.name
+  application_type    = "web"
+  workspace_id        = azurerm_log_analytics_workspace.log-workspace.id
+}
+
+resource "azurerm_cosmosdb_account" "PadelNotesCosmosDBAccount" {
+  name                = "padelnotesdb"
+  resource_group_name = azurerm_resource_group.PadelNotes-rg.name
+  location            = azurerm_resource_group.PadelNotes-rg.location
+  offer_type          = "Standard"
+  kind                = "GlobalDocumentDB"
+  consistency_policy {
+    consistency_level       = "BoundedStaleness"
+    max_interval_in_seconds = 300
+    max_staleness_prefix    = 100000
+  }
+  geo_location {
+    location          = "uksouth"
+    failover_priority = 0
+  }
+  capabilities {
+    name = "EnableServerless"
+  }
+}
+
+resource "azurerm_cosmosdb_sql_database" "PadelNotesDB" {
+  name                = "PadelNotesDB"
+  resource_group_name = azurerm_resource_group.PadelNotes-rg.name
+  account_name        = azurerm_cosmosdb_account.PadelNotesCosmosDBAccount.name
+}
+
+resource "azurerm_cosmosdb_sql_container" "PadelNotesContainerDB" {
+  name                  = "ImportGame"
+  resource_group_name   = azurerm_resource_group.PadelNotes-rg.name
+  account_name          = azurerm_cosmosdb_account.PadelNotesCosmosDBAccount.name
+  database_name         = azurerm_cosmosdb_sql_database.PadelNotesDB.name
+  partition_key_paths   = ["/playerId"]
+  partition_key_version = 1
+}
+
+resource "azurerm_linux_function_app" "functionapp" {
+  name                = "function-app001"
+  resource_group_name = azurerm_resource_group.PadelNotes-rg.name
+  location            = azurerm_resource_group.PadelNotes-rg.location
+
+
+  storage_account_name       = azurerm_storage_account.functionapp-storageaccount.name
+  storage_account_access_key = azurerm_storage_account.functionapp-storageaccount.primary_access_key
+  service_plan_id            = azurerm_service_plan.functionapp-serviceplan.id
+
+  app_settings = {
+    "APPINSIGHTS_CONNECTION_STRING"              = azurerm_application_insights.functionapp-appinsights.connection_string
+    "APPINSIGHTS_KEY"                            = azurerm_application_insights.functionapp-appinsights.instrumentation_key
+    "CosmosDBConnectionString"                   = azurerm_cosmosdb_account.PadelNotesCosmosDBAccount.primary_sql_connection_string
+    "ApplicationInsightsAgent_EXTENSION_VERSION" = "~3"
+
+  }
+
+  site_config {
+    application_stack {
+      python_version = "3.12"
+    }
+
+    cors {
+      allowed_origins = ["http://127.0.0.1:3000"]
+    }
+  }
+}
+
+

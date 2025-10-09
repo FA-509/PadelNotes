@@ -22,17 +22,15 @@ submit_button.addEventListener("click", () => {
 const importgame_form = document.getElementById("importagameform");
 
 importgame_form.addEventListener("submit", (event) => {
+  event.preventDefault();
   const formData = new FormData(importgame_form);
   const data = Object.fromEntries(formData);
 
-  fetch(
-    "https://padelnotes-functions-bta9hxdcajewb2cb.uksouth-01.azurewebsites.net/api/importgame",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-  );
+  fetch("https://function-app001.azurewebsites.net/api/importgame", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 });
