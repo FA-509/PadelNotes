@@ -64,22 +64,22 @@
           <div class="form-row">
           <label for="match-type">Match Type:</label>
           <select name="matchtype" id="matchtype">
-          <option value="type">Friendly</option>
-          <option value="type">Competitive</option>
+          <option value="Friendly">Friendly</option>
+          <option value="Competitive">Competitive</option>
           </select>
         </div>
 
         <div class="form-row">
           <label for="">Team A:</label>
-          <input name="teama-player1" type="text">
-          <input name="teama-player2" type="text">
+          <input name="teamaplayer1" type="text">
+          <input name="teamaplayer2" type="text">
 
         </div>
 
         <div class="form-row">
           <label for="">Team B:</label>
-          <input name="teamb-player1" type="text">
-          <input name="teamb-player2" type="text">
+          <input name="teambplayer1" type="text">
+          <input name="teambplayer2" type="text">
         </div>
 
         <table>
@@ -91,27 +91,48 @@
           </tr>
           <tr>
             <td>A</td>
-            <td><input type="number" name="set1-scorea"></td>
-            <td><input type="number" name="set2-scorea"></td>
-            <td><input type="number" name="set3-scorea"></td>
+            <td><input type="number" name="set1scorea"></td>
+            <td><input type="number" name="set2scorea"></td>
+            <td><input type="number" name="set3scorea"></td>
           </tr>
           <tr>
             <td>B</td>
-            <td><input type="number" name="set1-scoreb"></td>
-            <td><input type="number" name="set2-scoreb"></td>
-            <td><input type="number" name="set3-scoreb"></td>
+            <td><input type="number" name="set1scoreb"></td>
+            <td><input type="number" name="set2scoreb"></td>
+            <td><input type="number" name="set3scoreb"></td>
           </tr>
         </table>
 
       <button id="submit_button" type="submit">Submit</button>
 
       </form>
+</div>
 
+  <div id="Full-Match-History-Table">
+    <table>
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Location</th>
+        <th>Match Type</th>
+        <th>Team A Player 1</th>
+        <th>Team A Player 2</th>
+        <th>Team B Player 1</th>
+        <th>Team B Player 2</th>
+        <th>Set 1 (A)</th>
+        <th>Set 2 (A)</th>
+        <th>Set 3 (A)</th>
+        <th>Set 1 (B)</th>
+        <th>Set 2 (B)</th>
+        <th>Set 3 (B)</th>
+      </tr>
+      <tbody id="table-data">
+      </tbody>
+    </table>
 
+        <button class="close-button" id="close-button">Close</button>
+      </div>
 
-      <button class="close-button" id="close-button">Close</button>
-    </div>
-
-    <script src="script.js"></script>
-  </body>
-</html>
+      <script src="script.js"></script>
+    </body>
+  </html>
