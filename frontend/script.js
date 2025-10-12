@@ -26,7 +26,7 @@ importgame_form.addEventListener("submit", (event) => {
   const formData = new FormData(importgame_form);
   const data = Object.fromEntries(formData);
 
-  fetch("https://function-app001.azurewebsites.net/api/importgame", {
+  fetch("https://padelnotes-function-app001.azurewebsites.net/api/importgame", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

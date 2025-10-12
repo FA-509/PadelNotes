@@ -19,7 +19,7 @@ subscription_id = "12ce2e00-9ed1-4fb6-8bfc-03b9bd0a200a"
 }
 
 resource "azurerm_resource_group" "PadelNotes-rg" {
-  name     = "PadelNotes2"
+  name     = "PadelNotes"
   location = "UK South"
 }
 
@@ -91,7 +91,7 @@ resource "azurerm_cosmosdb_sql_container" "PadelNotesContainerDB" {
 }
 
 resource "azurerm_linux_function_app" "functionapp" {
-  name                = "function-app001"
+  name                = "padelnotes-function-app001"
   resource_group_name = azurerm_resource_group.PadelNotes-rg.name
   location            = azurerm_resource_group.PadelNotes-rg.location
 

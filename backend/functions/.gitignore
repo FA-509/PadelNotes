@@ -103,7 +103,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-.vscode
 
 # Spyder project settings
 .spyderproject
@@ -134,5 +133,3 @@ __blobstorage__
 __queuestorage__
 __azurite_db*__.json
 .python_packages
-
-.terraform
