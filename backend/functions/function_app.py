@@ -25,7 +25,14 @@ def importgame(req: func.HttpRequest, GameData: func.Out[func.Document]) -> func
 def full_match_history(req: func.HttpRequest, match_history: func.DocumentList) -> func.HttpResponse:
         return func.HttpResponse(json.dumps(match_history, default=vars))
 
+@app.route(route="find_game_via_id")
+@app.cosmos_db_input(arg_name="find_game", database_name="PadelNotesDB", 
+    container_name="ImportGame", connection="CosmosDBConnectionString")
 
-
-
+def find_game(req: func.HttpRequest, find_game: func.DocumentList) -> func.HttpResponse:
+        id = req.params.get("id")
+        for game in find_game:
+               if id == game["id"]:
+                       return func.HttpResponse(json.dumps(game, default=vars))
+  
 

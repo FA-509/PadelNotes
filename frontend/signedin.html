@@ -33,7 +33,6 @@
       </div>
     </header>
     <!-- Main Section -->
-    <main class="main"></main>
     <button class="importagame" id="importagame">Import a Game</button>
     <!-- Import a Game Form -->
     <div class="importagame-form" id="importagame-form">
@@ -101,11 +100,23 @@
             <td><input type="number" name="set2scoreb"></td>
             <td><input type="number" name="set3scoreb"></td>
           </tr>
+          <tr>
+            <label for="positivefeedback">What Went Well?: </label>
+            <input type="text" name="positivefeedback">
+          </tr>
+          <tr>
+          <label for="negativefeedback">What Went Bad?: </label>
+          <input type="text" name="negativefeedback">
+          </tr>
+
         </table>
 
       <button id="submit_button" type="submit">Submit</button>
 
+
+
       </form>
+      <button class="close-button" id="close-button">Close</button>
 </div>
 
   <div id="Full-Match-History-Table">
@@ -130,8 +141,18 @@
       </tbody>
     </table>
 
-        <button class="close-button" id="close-button">Close</button>
       </div>
+
+      <div id="editgameform">
+
+        <form>
+
+        </form>
+
+          <button class="editgame-close-button" id="editgame-close-button">Close</button>
+      </div>
+
+
 
       <script src="script.js"></script>
     </body>

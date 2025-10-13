@@ -97,17 +97,9 @@ header {
 }
 
 .importagame {
-  font-family: "Inter", sans-serif;
-  border: 1px solid black;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 8px 18px;
-  border-radius: 8px;
-  background: white;
-  position: absolute;
-  top: 120px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  translate: -50%, -50%;
 }
 
 .importagame-form {
@@ -133,4 +125,20 @@ header {
 
 #Full-Match-History-Table {
   align-items: center;
+}
+
+#editgameform {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+#editgameform.open {
+  display: flex;
 }

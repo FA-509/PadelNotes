@@ -1,4 +1,4 @@
-// Opening and Closing ""
+// Opening and Closing Import Game Form ""
 
 const open_button = document.getElementById("importagame");
 const close_button = document.getElementById("close-button");
@@ -65,8 +65,27 @@ fetch(
           <td>${match.data.set1scoreb}</td>
           <td>${match.data.set2scoreb}</td>
           <td>${match.data.set3scoreb}</td>
+          <td>${match.data.id}</td>
+          <td><button class="edit-button" id="${match.data.id}" type="button">Edit</button></td>
         </tr>
     `;
     }
     placeholder.innerHTML = out;
+
+    // Edit Game Form
+
+    const edit_buttons = document.querySelectorAll(".edit-button");
+    const editgameform = document.getElementById("editgameform");
+
+    edit_buttons.forEach(function (editbutton) {
+      editbutton.addEventListener("click", () =>
+        editgameform.classList.add("open")
+      );
+    });
+
+    const edit_close_button = document.getElementById("editgame-close-button");
+
+    edit_close_button.addEventListener("click", () =>
+      editgameform.classList.remove("open")
+    );
   });
