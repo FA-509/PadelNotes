@@ -36,3 +36,33 @@ def find_game(req: func.HttpRequest, find_game: func.DocumentList) -> func.HttpR
                        return func.HttpResponse(json.dumps(game, default=vars))
   
 
+@app.route(route="edit_game")
+@app.cosmos_db_input(arg_name="read_game", database_name="PadelNotesDB", 
+    container_name="ImportGame", connection="CosmosDBConnectionString")
+@app.cosmos_db_output(arg_name="update_game", database_name="PadelNotesDB", 
+    container_name="ImportGame", connection="CosmosDBConnectionString")
+
+def edit_game(req: func.HttpRequest, read_game: func.DocumentList, update_game: func.Out[func.Document]) -> func.HttpResponse:
+        id = req.params.get("id")
+        json_content = req.get_json()
+        document_found = False
+        for game in read_game:
+                if id == game["id"]:
+                        document_found = True
+                        for key, value in json_content.items():
+                               if value != game[key]:
+                                      game[key] = value
+                        update_game.set(game)
+        if document_found == True:
+                job_status = "Matching Document Found"
+        else:
+                job_status = "No Matching Documents Found"
+        
+        return func.HttpResponse(job_status)
+                        
+
+
+
+
+
+        

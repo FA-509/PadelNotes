@@ -145,11 +145,68 @@
 
       <div id="editgameform">
 
-        <form>
+        <form id="editgame_form">
+          <h3>Edit Game</h3>
+          
+          <label for="Date">Date</label>
+          <input type="date=" id="date_input">
 
+          <label for="Time">Time</label>
+          <input type="time" id="time_input">
+
+          <label for="Location">Location</label>
+          <input type="text" name="" id="location_input">
+
+          <label for="">Duration</label>
+          <input type="number" name="" id="duration_input">
+
+          <label for="">Match Type</label>
+          <input type="text" name="" id="matchtype_input">
+
+          <h3>Team A</h3>
+
+          <label for="">Player 1</label>
+          <input type="text" name="" id="teamaplayer1_input">
+
+          <label for="">Player 2</label>
+          <input type="text" name="" id="teamaplayer2_input">
+
+
+          <h3>Team B</h3>
+
+          <label for="">Player 1</label>
+          <input type="text" name="" id="teambplayer1_input">
+
+          <label for="">Player 2</label>
+          <input type="text" name="" id="teambplayer2_input">
+
+          <h3>Score</h3>
+          <table>
+            <td>A</td>
+            <td><input type="number" name="" id="set1scorea_input"></td>
+            <td><input type="number" id="set2scorea_input" name=""></td>
+            <td><input type="number" id="set3scorea_input" name=""></td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td><input type="number" name="" id="set1scoreb_input"></td>
+            <td><input type="number" id="set2scoreb_input" name=""></td>
+            <td><input type="number" id="set3scoreb_input" name=""></td>
+          </tr>
+          </table>
+
+          <label for="positivefeedback">What Went Well?: </label>
+          <input type="text" id="positivefeedback_input">
+          
+          <label for="negativefeedback">What Went Bad?: </label>
+          <input type="text" id="negativefeedback_input">
+  
+
+          <button id="edit-game-submit-button" type="submit">Submit</button>
         </form>
 
           <button class="editgame-close-button" id="editgame-close-button">Close</button>
+
       </div>
 
 
