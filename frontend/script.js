@@ -36,7 +36,7 @@ importgame_form.addEventListener("submit", (event) => {
 });
 
 // Full Match History Table
-
+async function loadTable() {}
 fetch(
   "https://padelnotes-function-app001.azurewebsites.net/api/full_match_history"
 )
@@ -66,6 +66,8 @@ fetch(
           <td>${match.data.set3scoreb}</td>
           <td>${match.data.id}</td>
           <td><button class="edit-button" id="${match.data.id}" type="button">Edit</button></td>
+          <td><button class="delete-button" id="${match.data.id}" type="button">Delete</button></td>
+          
         </tr>
     `;
     }
@@ -73,8 +75,17 @@ fetch(
 
     // Edit Game Form
 
+    const delete_buttons = document.querySelectorAll(".delete-button");
     const edit_buttons = document.querySelectorAll(".edit-button");
     const editgameform = document.getElementById("editgameform");
+
+    delete_buttons.forEach(function (deletebutton) {
+      deletebutton.addEventListener("click", () => {
+        fetch(
+          `https://padelnotes-function-app001.azurewebsites.net/api/delete_game?id=${deletebutton.id}`
+        );
+      });
+    });
 
     edit_buttons.forEach(function (editbutton) {
       editbutton.addEventListener("click", () =>
@@ -140,16 +151,20 @@ fetch(
 
         edit_form.addEventListener("submit", (event) => {
           event.preventDefault();
-          const formData = new FormData(importgame_form);
-          const data = Object.fromEntries(formData);
+          const formData_edit = new FormData(edit_form);
+          const data_edit = Object.fromEntries(formData_edit);
+          editgameform.classList.remove("open");
 
-          fetch(`http://localhost:7071/api/edit_game?id=${editbutton_id}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          });
+          fetch(
+            `https://padelnotes-function-app001.azurewebsites.net/api/edit_game?id=${editbutton_id}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data_edit),
+            }
+          );
         });
       });
     });

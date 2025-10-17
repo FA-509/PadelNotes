@@ -1,6 +1,8 @@
 import azure.functions as func
 import uuid
+import os
 import json
+from azure.cosmos import CosmosClient
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
@@ -59,10 +61,28 @@ def edit_game(req: func.HttpRequest, read_game: func.DocumentList, update_game: 
                 job_status = "No Matching Documents Found"
         
         return func.HttpResponse(job_status)
-                        
 
 
+@app.route(route="delete_game")
+@app.cosmos_db_input(arg_name="read_game", database_name="PadelNotesDB", 
+    container_name="ImportGame", connection="CosmosDBConnectionString")
+@app.cosmos_db_output(arg_name="delete_game", database_name="PadelNotesDB", 
+    container_name="ImportGame", connection="CosmosDBConnectionString")
 
+def delete_game(req: func.HttpRequest, read_game: func.DocumentList, delete_game: func.Out[func.Document]) -> func.HttpResponse:
+        URL = os.environ["URL"]
+        KEY = os.environ["KEY"]
+        client = CosmosClient(URL, credential=KEY)
+        DATABASE_NAME = 'PadelNotesDB'
+        database = client.get_database_client(DATABASE_NAME)
+        CONTAINER_NAME = 'ImportGame'
+        container = database.get_container_client(CONTAINER_NAME)
+        document_found = False
+        id = req.params.get("id")
+        for game in read_game:
+                if id == game["id"]:
+                        for item in container.query_items(parameters=[dict(name='@id', value=id)],query='SELECT * FROM ImportGame p WHERE p.id=@id',enable_cross_partition_query=True):
+                                container.delete_item(item, partition_key='1')
+                        return func.HttpResponse("Document Deleted")
+        return func.HttpResponse("Document Not Found")
 
-
-        
