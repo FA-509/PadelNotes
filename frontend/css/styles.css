@@ -1,0 +1,142 @@
+td.win {
+  color: green;
+  text-align: center;
+  font-weight: bold;
+}
+
+td.loss {
+  color: red;
+  text-align: center;
+  font-weight: bold;
+}
+
+td.draw {
+  color: grey;
+  text-align: center;
+  font-weight: bold;
+}
+
+#table-data {
+  cursor: pointer;
+}
+
+#table-data tr:hover {
+  outline: 2px solid lightgrey;
+}
+
+th {
+  text-align: center;
+}
+
+td {
+  text-align: center;
+}
+
+.form-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  border-style: solid;
+  background-color: white;
+}
+
+.form-container.open {
+  display: flex;
+}
+
+.edit-game-boarder {
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+  padding: 30px;
+  border-color: lightgray;
+}
+
+h4 {
+  text-align: center;
+}
+
+#score {
+  text-align: left;
+}
+
+.row {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+}
+
+.button-container {
+  text-align: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.score-edit {
+  width: 20px;
+  border: none;
+  padding-left: 0.3rem;
+}
+
+.name-edit {
+  width: auto;
+  border: none;
+  padding-left: 0.3rem;
+}
+
+.card {
+  margin-top: 50px;
+}
+
+.title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#import-game-btn {
+  text-align: right;
+  width: auto;
+  font-size: 14px;
+  margin-right: 45px;
+}
+
+.import-game-boarder {
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+  padding: 30px;
+  border-color: lightgray;
+}
+
+.importgame-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  border-style: solid;
+  background-color: white;
+}
+
+.importgame-container.open {
+  display: flex;
+}

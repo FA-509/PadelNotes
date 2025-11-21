@@ -7,5 +7,6 @@
   "debug.internalConsoleOptions": "neverOpen",
   "azureFunctions.projectLanguageModel": 2,
   "azureFunctions.projectSubpath": "backend/functions",
-  "livePreview.defaultPreviewPath": "/frontend/signedin.html"
+  "livePreview.defaultPreviewPath": "/frontend/signedin.html",
+  "liveServer.settings.multiRootWorkspaceName": "PadelNotes"
 }

@@ -6,7 +6,7 @@ from azure.cosmos import CosmosClient
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-@app.route(route="importgame")
+@app.route(route="import_game")
 @app.cosmos_db_output(arg_name="GameData", database_name="PadelNotesDB", 
     container_name="ImportGame", connection="CosmosDBConnectionString")
 
