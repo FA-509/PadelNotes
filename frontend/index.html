@@ -41,13 +41,14 @@
             </li>
           </ul>
         </div>
-      </div>
+        <img src="/frontend/images/settings icon.svg" width="30" height="30" alt="" class="d-inline-block me-2" id="settings-icon"></img>
+      </div>    
     </nav>
     <!-- END OF NAVBAR -->
 
     <!-- MATCH HISTORY CARD -->
      <div class="container">
-    <div class="card" style="width: 30rem">
+    <div class="card" style="width: 25rem">
       <div class="card-body">
         <div class="title-section">
           <h5 class="card-title">Match History</h5>
@@ -66,6 +67,30 @@
       </div>
     </div>
     </div>
+
+        <!-- RATING CHART CARD -->
+     <div class="container">
+    <div class="card" style="width: 40rem">
+      <div class="card-body">
+        <div class="title-section">
+          <h5 class="card-title">Match Rating Trend</h5>
+      </div>
+      <canvas id="line-chart"></canvas>
+    </div>
+    </div>
+
+        <!-- AI CARD -->
+     <div class="container">
+    <div class="card" style="width: 40rem">
+      <div class="card-body">
+        <div class="title-section">
+          <h5 class="card-title">Challenges</h5>
+      </div>
+    </div>
+    </div>
+
+
+
 
 <!-- EDIT GAME FORM -->
  <div class="form-container" id="form-container">
@@ -183,6 +208,20 @@
 </div>
 </div>
 
+<!-- SETTINGS PANEL -->
+
+      <div class="settings-container" id="settings-container">
+        <div class="settings-window">
+        <h4>Settings</h4>
+        <div>
+          <label for="">Start Rating</label>
+          <input type="number" placeholder="0" id="start-rating">
+        </div>
+        <div class="button-container">
+          <input class="btn btn-primary" type="submit" value="Save" id="setting-save-button">
+        </div>
+        </div>
+      </div>
 
 <!-- IMPORT A GAME FORM -->
 
@@ -307,6 +346,10 @@
 </div>
 
 
-    <script src="js/script.js"></script>
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" integrity="sha512-Y51n9mtKTVBh3Jbx5pZSJNDDMyY+yGe77DGtBPzRlgsf/YLCh13kSZ3JmfHGzYFCmOndraf0sQgfM654b7dJ3w==" crossorigin="anonymous" 
+    referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+     <script src="js/script.js"></script>
   </body>
 </html>

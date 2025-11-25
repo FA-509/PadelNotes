@@ -68,7 +68,11 @@ fetch(
   .then(function (responseData) {
     let placeholder = document.querySelector("#table-data");
     let out = "";
-    for (let match of responseData.data) {
+    const dataArray = responseData.data;
+    newDateArray = dataArray.sort(
+      (a, b) => new Date(b.data.date) - new Date(a.data.date)
+    );
+    for (let match of newDateArray) {
       let rawDate = match.data.date;
       let rawResult = match.data.result;
       let matchId = match.data.id;
@@ -80,9 +84,138 @@ fetch(
           `;
     }
     placeholder.innerHTML = out;
+
+    // RATING CHART
+
+    const dates = [];
+    const ratings = [];
+    const startDate = "";
+    dates.push(startDate);
+    for (let match of newDateArray) {
+      let rawDate = match.data.date;
+      let rawRating = match.data.rating;
+      dates.push(rawDate);
+      ratings.push(rawRating);
+    }
+
+    ratingsAdded = [];
+
+    const RatingValue = localStorage.getItem("start-rating");
+    const FloatRatingValue = parseFloat(RatingValue);
+    ratingsAdded.push(FloatRatingValue);
+    let n = 0;
+    for (let rating of ratings) {
+      let floatRating = parseFloat(rating);
+      let combinedRating = ratingsAdded[n] + floatRating;
+      ratingsAdded.push(combinedRating);
+      n = n + 1;
+    }
+    const labels = dates;
+    const data = {
+      labels: labels,
+      datasets: [
+        {
+          data: ratingsAdded,
+          fill: true,
+          tension: 0.1,
+          radius: 5,
+          borderColor: "rgb(60, 120, 255)",
+          pointBackgroundColor: "rgb(60, 120, 255)",
+          backgroundColor: function (context) {
+            const chart = context.chart;
+            const { ctx, chartArea } = chart;
+            if (!chartArea) {
+              return;
+            }
+            return getGradient(ctx, chartArea);
+          },
+        },
+      ],
+    };
+
+    // COLOUR GRADIENT FUNCTION
+
+    let width, height, gradient;
+    function getGradient(ctx, chartArea) {
+      const chartWidth = chartArea.right - chartArea.left;
+      const chartHeight = chartArea.bottom - chartArea.top;
+      if (!gradient || width !== chartWidth || height !== chartHeight) {
+        width = chartWidth;
+        height = chartHeight;
+        gradient = ctx.createLinearGradient(
+          0,
+          chartArea.bottom,
+          0,
+          chartArea.top
+        );
+        gradient.addColorStop(0, "rgba(173, 197, 252, 1)");
+        gradient.addColorStop(0.5, "rgba(127, 163, 247, 1)");
+        gradient.addColorStop(1, "rgb(60, 120, 255)");
+      }
+
+      return gradient;
+    }
+
+    const lastArrayIndex = ratingsAdded.length;
+    const config = {
+      type: "line",
+      data: data,
+      // plugins: [ChartDataLabels],
+      options: {
+        layout: {
+          padding: {
+            top: 30,
+            right: 15,
+          },
+        },
+        scales: {
+          y: {
+            display: true,
+            position: "right",
+          },
+          x: {
+            display: false,
+          },
+        },
+        plugins: {
+          // datalabels: {
+          //   anchor: "end",
+          //   align: "end",
+          //   font: {
+          //     size: 15,
+          //     weight: "bold",
+          //   },
+          //   display: function (context) {
+          //     return context.dataIndex === lastArrayIndex - 1;
+          //   },
+          // },
+          legend: {
+            display: false,
+          },
+        },
+      },
+    };
+
+    const chart = new Chart(document.getElementById("line-chart"), config);
+
+    // AI
+
+    // GRAB LAST 5 OR LESS BAD FEEDBACKS
+
+    const badFeedbackArray = [];
+    const lengthNewDateArray = newDateArray.length;
+    let count;
+    if (lengthNewDateArray > 5) {
+      count = 5;
+    } else {
+      count = lengthNewDateArray;
+    }
+    for (let i = 0; i < count; i++) {
+      badFeedbackArray.push(newDateArray[i].data.negativefeedback);
+    }
   });
 
-// LISTEN FOR CLICKS ON TABLE
+// LISTEN FOR CLICKS ON MATCH HISTORY TABLE
 
 document.querySelector("#table-data").addEventListener("click", (event) => {
   let closestRow = event.target.closest("tr");
@@ -223,4 +356,25 @@ importGameForm.addEventListener("submit", (event) => {
     document.getElementById("importgame-container").classList.remove("open");
     window.location.reload();
   });
+});
+
+// SETTINGS PANEL
+
+const settingsIcon = document.getElementById("settings-icon");
+const settingsContainer = document.getElementById("settings-container");
+
+settingsIcon.addEventListener("click", () => {
+  settingsContainer.classList.add("open");
+});
+
+// SAVE START RATING IN SETTINGS PANEL
+
+const settingsSaveBtn = document.getElementById("setting-save-button");
+const startRatingInput = document.getElementById("start-rating");
+
+settingsSaveBtn.addEventListener("click", () => {
+  settingsContainer.classList.remove("open");
+  startRatingValue = startRatingInput.value;
+  localStorage.setItem("start-rating", startRatingValue);
+  window.location.reload();
 });

@@ -113,7 +113,7 @@ input[type="number"] {
   text-align: right;
   width: auto;
   font-size: 14px;
-  margin-right: 45px;
+  margin-right: 20px;
 }
 
 .import-game-boarder {
@@ -139,4 +139,28 @@ input[type="number"] {
 
 .importgame-container.open {
   display: flex;
+}
+
+#settings-icon {
+  cursor: pointer;
+}
+
+.settings-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  border-style: solid;
+}
+
+.settings-container.open {
+  display: flex;
+}
+
+#setting-save-button {
+  margin-top: 1rem;
 }
