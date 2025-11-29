@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="/frontend/images/favicon.ico">
     <link rel="stylesheet" href="css/bootstrap.css" />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
@@ -70,7 +71,7 @@
 
         <!-- RATING CHART CARD -->
      <div class="container">
-    <div class="card" style="width: 40rem">
+    <div class="card" style="width: 20rem">
       <div class="card-body">
         <div class="title-section">
           <h5 class="card-title">Match Rating Trend</h5>
@@ -84,7 +85,21 @@
     <div class="card" style="width: 40rem">
       <div class="card-body">
         <div class="title-section">
-          <h5 class="card-title">Challenges</h5>
+          <h5 class="card-title">Challenge</h5>
+          <button type="button" class="btn btn-primary" id="btn-challenge">Regenerate Challenge</button>
+        </div>
+        <div class="row">
+          <label for="">Primary Weakness:</label>
+          <p id="primary-weakness"></p>
+        </div>
+        <div class="row">
+          <label for="">Why It Matters:</label>
+          <p id="why-it-matters"></p>
+        </div>
+        <div class="row">
+          <label for="">Your Challenge:</label>
+          <p id="your-challenge"></p>
+        </div>
       </div>
     </div>
     </div>

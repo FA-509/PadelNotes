@@ -63,7 +63,7 @@ fetch(
     return response.json();
   })
 
-  //   ADD MATCH HISTORY TO TABLE
+  //   ADD MATCH HISTORY TO TABLE AND SHOW ONLY LAST 5 MATCHES
 
   .then(function (responseData) {
     let placeholder = document.querySelector("#table-data");
@@ -198,8 +198,6 @@ fetch(
 
     const chart = new Chart(document.getElementById("line-chart"), config);
 
-    // AI
-
     // GRAB LAST 5 OR LESS BAD FEEDBACKS
 
     const badFeedbackArray = [];
@@ -213,42 +211,81 @@ fetch(
     for (let i = 0; i < count; i++) {
       badFeedbackArray.push(newDateArray[i].data.negativefeedback);
     }
-  });
 
-// LISTEN FOR CLICKS ON MATCH HISTORY TABLE
+    // GENERATE CHALLENGE
 
-document.querySelector("#table-data").addEventListener("click", (event) => {
-  let closestRow = event.target.closest("tr");
-  let matchId = closestRow.id;
-  fetch(
-    `https://padelnotes-function-app001.azurewebsites.net/api/find_game_via_id?id=${matchId}`
-  )
-    .then(function (response) {
-      return response.json();
-    })
+    const badFeedbackJson = {
+      content: badFeedbackArray.toString(),
+    };
 
-    // PUT MATCH INFO ONTO EDIT GAME FORM
+    challengeBtn = document.getElementById("btn-challenge");
 
-    .then(function (game_info) {
-      document.getElementById("form-container").classList.add("open");
-      document.getElementById("date").value = game_info.data.date;
-      document.getElementById("time").value = game_info.data.time;
-      document.getElementById("location").value = game_info.data.location;
-      document.getElementById("duration").value = game_info.data.duration;
-      document.getElementById("result").value = game_info.data.result;
-      document.getElementById("positivefeedback").value =
-        game_info.data.positivefeedback;
-      document.getElementById("negativefeedback").value =
-        game_info.data.negativefeedback;
-      document.getElementById("matchid").value = game_info.data.id;
-      document.getElementById("rating").value = game_info.data.rating;
+    challengeBtn.addEventListener("click", (event) => {
+      fetch(
+        `https://padelnotes-function-app001.azurewebsites.net/api/generate_challenge`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(badFeedbackJson),
+        }
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (response) {
+          localStorage.setItem("challenge", JSON.stringify(response));
+        });
+    });
 
-      // PUT NAMES AND SCORES INTO EDIT TABLE
+    // LOCAL STORAGE CHALLENGE
 
-      let editGameTableBody = document.querySelector("#editform-table-data");
-      let tableRows = "";
-      {
-        tableRows += `
+    const generated_challenge = localStorage.getItem("challenge");
+    parsedJSON = JSON.parse(generated_challenge);
+    primaryWeaknessText = parsedJSON["primaryWeakness"];
+    whyItMattersText = parsedJSON["whyItMatters"];
+    challengeText = parsedJSON["challenge"];
+    document.getElementById("primary-weakness").innerText = primaryWeaknessText;
+    document.getElementById("why-it-matters").innerText = whyItMattersText;
+    document.getElementById("your-challenge").innerText = challengeText;
+
+    // LISTEN FOR CLICKS ON MATCH HISTORY TABLE
+
+    document.querySelector("#table-data").addEventListener("click", (event) => {
+      let closestRow = event.target.closest("tr");
+      let matchId = closestRow.id;
+      fetch(
+        `https://padelnotes-function-app001.azurewebsites.net/api/find_game_via_id?id=${matchId}`
+      )
+        .then(function (response) {
+          return response.json();
+        })
+
+        // PUT MATCH INFO ONTO EDIT GAME FORM
+
+        .then(function (game_info) {
+          document.getElementById("form-container").classList.add("open");
+          document.getElementById("date").value = game_info.data.date;
+          document.getElementById("time").value = game_info.data.time;
+          document.getElementById("location").value = game_info.data.location;
+          document.getElementById("duration").value = game_info.data.duration;
+          document.getElementById("result").value = game_info.data.result;
+          document.getElementById("positivefeedback").value =
+            game_info.data.positivefeedback;
+          document.getElementById("negativefeedback").value =
+            game_info.data.negativefeedback;
+          document.getElementById("matchid").value = game_info.data.id;
+          document.getElementById("rating").value = game_info.data.rating;
+
+          // PUT NAMES AND SCORES INTO EDIT TABLE
+
+          let editGameTableBody = document.querySelector(
+            "#editform-table-data"
+          );
+          let tableRows = "";
+          {
+            tableRows += `
         <tr>
           <td scope="row">${game_info.data.teamaplayer1} / ${game_info.data.teamaplayer2}</td>
           <td><input type="number" name="set1scorea" class="score-edit" value="${game_info.data.set1scorea}"></td>
@@ -262,64 +299,66 @@ document.querySelector("#table-data").addEventListener("click", (event) => {
           <td><input type="number" name="set3scoreb" class="score-edit" value="${game_info.data.set3scoreb}"></td>
         </tr>
           `;
-      }
-      editGameTableBody.innerHTML = tableRows;
+          }
+          editGameTableBody.innerHTML = tableRows;
+        });
     });
-});
 
-// POST FORM AFTER SAVE BUTTON HAS BEEN CLICKED
-let editgame_form = document.getElementById("editgame_form");
+    // POST FORM AFTER SAVE BUTTON HAS BEEN CLICKED
+    let editgame_form = document.getElementById("editgame_form");
 
-editgame_form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const matchIdInput = document.getElementById("matchid");
-  const matchId = matchIdInput.value;
-  console.log(matchId);
-  let formData_edit = new FormData(editgame_form);
-  let match_edit = Object.fromEntries(formData_edit);
-  document.getElementById("form-container").classList.remove("open");
+    editgame_form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const matchIdInput = document.getElementById("matchid");
+      const matchId = matchIdInput.value;
+      console.log(matchId);
+      let formData_edit = new FormData(editgame_form);
+      let match_edit = Object.fromEntries(formData_edit);
+      document.getElementById("form-container").classList.remove("open");
 
-  fetch(
-    `https://padelnotes-function-app001.azurewebsites.net/api/edit_game?id=${matchId}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(match_edit),
-    }
-  ).then(function () {
-    window.location.reload();
-  });
-});
+      fetch(
+        `https://padelnotes-function-app001.azurewebsites.net/api/edit_game?id=${matchId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(match_edit),
+        }
+      ).then(function () {
+        window.location.reload();
+      });
+    });
 
-// DELETE GAME IF DELETE BUTTON IS PRESSED
+    // DELETE GAME IF DELETE BUTTON IS PRESSED
 
-deleteBtn = document.getElementById("delete-btn");
+    deleteBtn = document.getElementById("delete-btn");
 
-deleteBtn.addEventListener("click", () => {
-  const matchIdInput = document.getElementById("matchid");
-  const matchId = matchIdInput.value;
-  console.log(matchId);
-  fetch(
-    `https://padelnotes-function-app001.azurewebsites.net/api/delete_game?id=${matchId}`
-  ).then(function () {
-    document.getElementById("form-container").classList.remove("open");
-    window.location.reload();
-  });
-});
+    deleteBtn.addEventListener("click", () => {
+      const matchIdInput = document.getElementById("matchid");
+      const matchId = matchIdInput.value;
+      console.log(matchId);
+      fetch(
+        `https://padelnotes-function-app001.azurewebsites.net/api/delete_game?id=${matchId}`
+      ).then(function () {
+        document.getElementById("form-container").classList.remove("open");
+        window.location.reload();
+      });
+    });
 
-// IMPORT A GAME
+    // IMPORT A GAME
 
-importGameBtn = document.getElementById("import-game-btn");
+    importGameBtn = document.getElementById("import-game-btn");
 
-importGameBtn.addEventListener("click", () => {
-  document.getElementById("importgame-container").classList.add("open");
-  // PUT NAMES AND SCORES INTO IMPORT GAME TABLE
-  let importGameTableBody = document.querySelector("#importform-table-data");
-  let tableRows = "";
-  {
-    tableRows += `
+    importGameBtn.addEventListener("click", () => {
+      document.getElementById("importgame-container").classList.add("open");
+      // PUT NAMES AND SCORES INTO IMPORT GAME TABLE
+      let importGameTableBody = document.querySelector(
+        "#importform-table-data"
+      );
+      let tableRows = "";
+      {
+        tableRows += `
         <tr>
           <td scope="row"><input type="text" name="teamaplayer1" class="name-edit" placeholder="Player A"> / <input type="text" name="teamaplayer2" class="name-edit" placeholder="Player A"></td>
           <td><input type="number" name="set1scorea" class="score-edit" placeholder="0"></td>
@@ -333,48 +372,54 @@ importGameBtn.addEventListener("click", () => {
           <td><input type="number" name="set3scoreb" class="score-edit" placeholder="0"></td>
         </tr>
           `;
-  }
-  importGameTableBody.innerHTML = tableRows;
-});
+      }
+      importGameTableBody.innerHTML = tableRows;
+    });
 
-// SUBMIT GAME TO API
+    // SUBMIT GAME TO API
 
-const importGameForm = document.getElementById("importgame-form");
+    const importGameForm = document.getElementById("importgame-form");
 
-importGameForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const formData = new FormData(importGameForm);
-  const data = Object.fromEntries(formData);
+    importGameForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const formData = new FormData(importGameForm);
+      const data = Object.fromEntries(formData);
 
-  fetch("https://padelnotes-function-app001.azurewebsites.net/api/importgame", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  }).then(function () {
-    document.getElementById("importgame-container").classList.remove("open");
-    window.location.reload();
+      fetch(
+        "https://padelnotes-function-app001.azurewebsites.net/api/importgame",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      ).then(function () {
+        document
+          .getElementById("importgame-container")
+          .classList.remove("open");
+        window.location.reload();
+      });
+    });
+
+    // SETTINGS PANEL
+
+    const settingsIcon = document.getElementById("settings-icon");
+    const settingsContainer = document.getElementById("settings-container");
+
+    settingsIcon.addEventListener("click", () => {
+      settingsContainer.classList.add("open");
+    });
+
+    // SAVE START RATING IN SETTINGS PANEL
+
+    const settingsSaveBtn = document.getElementById("setting-save-button");
+    const startRatingInput = document.getElementById("start-rating");
+
+    settingsSaveBtn.addEventListener("click", () => {
+      settingsContainer.classList.remove("open");
+      startRatingValue = startRatingInput.value;
+      localStorage.setItem("start-rating", startRatingValue);
+      window.location.reload();
+    });
   });
-});
-
-// SETTINGS PANEL
-
-const settingsIcon = document.getElementById("settings-icon");
-const settingsContainer = document.getElementById("settings-container");
-
-settingsIcon.addEventListener("click", () => {
-  settingsContainer.classList.add("open");
-});
-
-// SAVE START RATING IN SETTINGS PANEL
-
-const settingsSaveBtn = document.getElementById("setting-save-button");
-const startRatingInput = document.getElementById("start-rating");
-
-settingsSaveBtn.addEventListener("click", () => {
-  settingsContainer.classList.remove("open");
-  startRatingValue = startRatingInput.value;
-  localStorage.setItem("start-rating", startRatingValue);
-  window.location.reload();
-});
