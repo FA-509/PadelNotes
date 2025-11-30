@@ -63,7 +63,7 @@ fetch(
     return response.json();
   })
 
-  //   ADD MATCH HISTORY TO TABLE AND SHOW ONLY LAST 5 MATCHES
+  //   SORT DATE BY LATEST DATE FIRST
 
   .then(function (responseData) {
     let placeholder = document.querySelector("#table-data");
@@ -72,16 +72,39 @@ fetch(
     newDateArray = dataArray.sort(
       (a, b) => new Date(b.data.date) - new Date(a.data.date)
     );
-    for (let match of newDateArray) {
-      let rawDate = match.data.date;
-      let rawResult = match.data.result;
-      let matchId = match.data.id;
-      out += `
+
+    // ADD MATCHES TO MATCH HISTORY CARD IF LESS THAN OR EQUAL TO 4 MATCHES
+
+    lastFiveMatchesArray = [];
+    if (newDateArray.length <= 4) {
+      for (let match of newDateArray) {
+        let rawDate = match.data.date;
+        let rawResult = match.data.result;
+        let matchId = match.data.id;
+        out += `
               <tr id="${matchId}">
                 <td style="text-align: left;">${dateFormatter(rawDate)}</td>
                 <td class="${colourResult(rawResult)}">${rawResult}</td>
               </tr>
           `;
+      }
+
+      // IF 5 OR MORE MATCHES
+    } else {
+      for (let i = 0; i < 5; i++) {
+        lastFiveMatchesArray.push(newDateArray[i].data);
+      }
+      for (let match of lastFiveMatchesArray) {
+        let rawDate = match.date;
+        let rawResult = match.result;
+        let matchId = match.id;
+        out += `
+                  <tr id="${matchId}">
+                    <td style="text-align: left;">${dateFormatter(rawDate)}</td>
+                    <td class="${colourResult(rawResult)}">${rawResult}</td>
+                  </tr>
+              `;
+      }
     }
     placeholder.innerHTML = out;
 
@@ -89,8 +112,7 @@ fetch(
 
     const dates = [];
     const ratings = [];
-    const startDate = "";
-    dates.push(startDate);
+    const startRating = "";
     for (let match of newDateArray) {
       let rawDate = match.data.date;
       let rawRating = match.data.rating;
@@ -98,8 +120,18 @@ fetch(
       ratings.push(rawRating);
     }
 
-    ratingsAdded = [];
+    sortDates = dataArray.sort(
+      (a, b) => new Date(a.data.date) - new Date(b.data.date)
+    );
 
+    dataOrdered = [];
+
+    for (let date of sortDates) {
+      dataOrdered.push(date.data.date);
+    }
+    dataOrdered.unshift(startRating);
+
+    ratingsAdded = [];
     const RatingValue = localStorage.getItem("start-rating");
     const FloatRatingValue = parseFloat(RatingValue);
     ratingsAdded.push(FloatRatingValue);
@@ -110,7 +142,7 @@ fetch(
       ratingsAdded.push(combinedRating);
       n = n + 1;
     }
-    const labels = dates;
+    const labels = dataOrdered;
     const data = {
       labels: labels,
       datasets: [
@@ -236,6 +268,7 @@ fetch(
         })
         .then(function (response) {
           localStorage.setItem("challenge", JSON.stringify(response));
+          window.location.reload();
         });
     });
 
@@ -311,7 +344,6 @@ fetch(
       event.preventDefault();
       const matchIdInput = document.getElementById("matchid");
       const matchId = matchIdInput.value;
-      console.log(matchId);
       let formData_edit = new FormData(editgame_form);
       let match_edit = Object.fromEntries(formData_edit);
       document.getElementById("form-container").classList.remove("open");
@@ -337,7 +369,6 @@ fetch(
     deleteBtn.addEventListener("click", () => {
       const matchIdInput = document.getElementById("matchid");
       const matchId = matchIdInput.value;
-      console.log(matchId);
       fetch(
         `https://padelnotes-function-app001.azurewebsites.net/api/delete_game?id=${matchId}`
       ).then(function () {
@@ -386,7 +417,7 @@ fetch(
       const data = Object.fromEntries(formData);
 
       fetch(
-        "https://padelnotes-function-app001.azurewebsites.net/api/importgame",
+        "https://padelnotes-function-app001.azurewebsites.net/api/import_game",
         {
           method: "POST",
           headers: {

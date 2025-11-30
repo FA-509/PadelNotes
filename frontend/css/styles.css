@@ -67,6 +67,7 @@ h4 {
 
 .row {
   margin-bottom: 1rem;
+  margin-right: 20px;
 }
 
 .row label {
@@ -111,6 +112,7 @@ input[type="number"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  white-space: nowrap;
 }
 
 #import-game-btn {
@@ -167,4 +169,15 @@ input[type="number"] {
 
 #setting-save-button {
   margin-top: 1rem;
+}
+
+.match-history-card {
+  margin-left: 80px;
+}
+
+/* .rating-chart-card {
+} */
+
+.ai-card {
+  margin-right: 50px;
 }
