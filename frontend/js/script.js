@@ -130,7 +130,7 @@ fetch(
       datesOrdered.push(date.data.date);
     }
 
-    // ADD START RATING TO ARRAY
+    // ADD START RATING TO DATES ARRAY
 
     datesOrdered.unshift(startRating);
 
