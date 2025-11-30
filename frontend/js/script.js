@@ -124,25 +124,31 @@ fetch(
       (a, b) => new Date(a.data.date) - new Date(b.data.date)
     );
 
-    dataOrdered = [];
+    datesOrdered = [];
 
     for (let date of sortDates) {
-      dataOrdered.push(date.data.date);
+      datesOrdered.push(date.data.date);
     }
-    dataOrdered.unshift(startRating);
+
+    // ADD START RATING TO ARRAY
+
+    datesOrdered.unshift(startRating);
+
+    // CREATE RATINGS ARRAY
 
     ratingsAdded = [];
     const RatingValue = localStorage.getItem("start-rating");
     const FloatRatingValue = parseFloat(RatingValue);
     ratingsAdded.push(FloatRatingValue);
     let n = 0;
-    for (let rating of ratings) {
-      let floatRating = parseFloat(rating);
+    for (let rating of sortDates) {
+      let floatRating = parseFloat(rating.data.rating);
       let combinedRating = ratingsAdded[n] + floatRating;
       ratingsAdded.push(combinedRating);
       n = n + 1;
     }
-    const labels = dataOrdered;
+
+    const labels = datesOrdered;
     const data = {
       labels: labels,
       datasets: [
