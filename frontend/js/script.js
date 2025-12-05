@@ -282,12 +282,15 @@ fetch(
 
     const generated_challenge = localStorage.getItem("challenge");
     parsedJSON = JSON.parse(generated_challenge);
-    primaryWeaknessText = parsedJSON["primaryWeakness"];
-    whyItMattersText = parsedJSON["whyItMatters"];
-    challengeText = parsedJSON["challenge"];
-    document.getElementById("primary-weakness").innerText = primaryWeaknessText;
-    document.getElementById("why-it-matters").innerText = whyItMattersText;
-    document.getElementById("your-challenge").innerText = challengeText;
+    if (parsedJSON != null) {
+      primaryWeaknessText = parsedJSON["primaryWeakness"];
+      whyItMattersText = parsedJSON["whyItMatters"];
+      challengeText = parsedJSON["challenge"];
+      document.getElementById("primary-weakness").innerText =
+        primaryWeaknessText;
+      document.getElementById("why-it-matters").innerText = whyItMattersText;
+      document.getElementById("your-challenge").innerText = challengeText;
+    }
 
     // LISTEN FOR CLICKS ON MATCH HISTORY TABLE
 

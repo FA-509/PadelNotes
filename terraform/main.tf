@@ -8,6 +8,16 @@ terraform {
   }
 }
 
+resource "random_string" "unique" {
+  length      = 5
+  min_numeric = 5
+  numeric     = true
+  special     = false
+  lower       = true
+  upper       = false
+}
+
+
 provider "azurerm" {
   features {
     resource_group {
@@ -90,6 +100,56 @@ resource "azurerm_cosmosdb_sql_container" "PadelNotesContainerDB" {
   partition_key_version = 1
 }
 
+
+resource "azurerm_cognitive_account" "ai_foundry" {
+  name                = "PadelNotesAI${random_string.unique.result}"
+  resource_group_name = azurerm_resource_group.PadelNotes-rg.name
+  location            = azurerm_resource_group.PadelNotes-rg.location
+  kind                = "AIServices"
+
+  # identity {
+  #   type = "SystemAssigned"
+  # }
+
+  sku_name = "S0"
+
+}
+
+resource "azurerm_cognitive_deployment" "aifoundry_deployment_gpt_4o-mini" {
+  depends_on = [
+    azurerm_cognitive_account.ai_foundry
+  ]
+  name                 = "gpt-4o-mini"
+  cognitive_account_id = azurerm_cognitive_account.ai_foundry.id
+
+  sku {
+    name     = "GlobalStandard"
+    capacity = 1
+  }
+
+  model {
+    format  = "OpenAI"
+    name    = "gpt-4o-mini"
+    version = "2024-07-18"
+  }
+}
+
+
+# resource "azurerm_cognitive_account" "PadelNotesAI_cognitive_account" {
+#   name                = "AI"
+#   resource_group_name = azurerm_resource_group.PadelNotes-rg.name
+#   location            = azurerm_resource_group.PadelNotes-rg.location
+#   kind                = "OpenAI"
+#   sku_name            = "S0"
+# }
+
+
+
+# resource "azurerm_cognitive_deployment" "PadelNotesAI_cognitive_deployment" {
+#   name                 = "PadelNotes"
+#   cognitive_account_id = azurerm_cognitive_account.PadelNotesAI_cognitive_account.id
+
+
 resource "azurerm_linux_function_app" "functionapp" {
   name                = "padelnotes-function-app001"
   resource_group_name = azurerm_resource_group.PadelNotes-rg.name
@@ -105,6 +165,7 @@ resource "azurerm_linux_function_app" "functionapp" {
     "APPINSIGHTS_KEY"                            = azurerm_application_insights.functionapp-appinsights.instrumentation_key
     "CosmosDBConnectionString"                   = azurerm_cosmosdb_account.PadelNotesCosmosDBAccount.primary_sql_connection_string
     "ApplicationInsightsAgent_EXTENSION_VERSION" = "~3"
+    "OPANAI_KEY" = azurerm_cognitive_account.ai_foundry.primary_access_key
 
   }
 

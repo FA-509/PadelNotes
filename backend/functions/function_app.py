@@ -90,7 +90,7 @@ def delete_game(req: func.HttpRequest, read_game: func.DocumentList, delete_game
 @app.route(route="generate_challenge")
 
 def generate_challenge(req: func.HttpRequest) -> func.HttpResponse:
-        API_ENDPOINT = "https://padelnotesai.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2025-01-01-preview"
+        API_ENDPOINT = "https://uksouth.api.cognitive.microsoft.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2025-01-01-preview"
         AI_KEY = os.environ["OPANAI_KEY"]
         bad_feedback = req.get_json()
         bad_feedback
@@ -109,7 +109,6 @@ def generate_challenge(req: func.HttpRequest) -> func.HttpResponse:
         ai_response = requests.post(API_ENDPOINT, json = ai_body, headers = {"api-key": AI_KEY,"Content-Type":"application/json"})
         ai_response_json = ai_response.json()
         return func.HttpResponse(ai_response_json["choices"][0]["message"]["content"])
-
 
 
 
