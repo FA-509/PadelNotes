@@ -278,7 +278,9 @@ fetch(
         });
     });
 
-    // LOCAL STORAGE CHALLENGE
+    console.log(badFeedbackJson);
+
+    // STORE CHALLENGE INTO LOCAL  STORAGE
 
     const generated_challenge = localStorage.getItem("challenge");
     parsedJSON = JSON.parse(generated_challenge);
