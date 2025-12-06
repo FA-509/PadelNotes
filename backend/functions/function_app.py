@@ -3,6 +3,7 @@ import uuid
 import os
 import json
 import requests
+import base64
 from azure.cosmos import CosmosClient
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
@@ -21,12 +22,34 @@ def importgame(req: func.HttpRequest, GameData: func.Out[func.Document]) -> func
         return func.HttpResponse("Game Imported to Database")
 
 
-@app.route(route="full_match_history")
-@app.cosmos_db_input(arg_name="match_history", database_name="PadelNotesDB", 
-    container_name="ImportGame", connection="CosmosDBConnectionString")
 
-def full_match_history(req: func.HttpRequest, match_history: func.DocumentList) -> func.HttpResponse:
-        return func.HttpResponse(json.dumps(match_history, default=vars))
+@app.route(route="get_user_match_history")
+
+def get_user_match_history(req: func.HttpRequest) -> func.HttpResponse:
+        headers_dict = dict(req.headers)
+        x_ms_client_principal_base64 = headers_dict["x-ms-client-principal"]
+        decoded_bytes = base64.b64decode(x_ms_client_principal_base64)
+        decoded_x_ms_client_principal = decoded_bytes.decode('utf-8')
+        decoded_x_ms_client_principal_dict = json.loads(decoded_x_ms_client_principal)
+        user_id = decoded_x_ms_client_principal_dict["userId"]
+
+        URL = os.environ["URL"]
+        KEY = os.environ["KEY"]
+        client = CosmosClient(URL, credential=KEY)
+        DATABASE_NAME = 'PadelNotesDB'
+        database = client.get_database_client(DATABASE_NAME)
+        CONTAINER_NAME = 'ImportGame'
+        container = database.get_container_client(CONTAINER_NAME)
+        player_match_history = []
+        for item in container.query_items(
+        query='SELECT * FROM r WHERE r.playerId = @userId',
+        parameters=[
+        dict(name='@userId', value=user_id)]):
+                player_match_history.append(item)
+        return func.HttpResponse(json.dumps(player_match_history, indent=True))
+
+                
+
 
 @app.route(route="find_game_via_id")
 @app.cosmos_db_input(arg_name="find_game", database_name="PadelNotesDB", 

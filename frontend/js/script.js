@@ -1,3 +1,9 @@
+// FIND OUT LOGGED IN USER ID
+
+fetch("/.auth/me").then(function (response) {
+  return response.json();
+});
+
 // Match History Table Card
 
 var months_list = [
