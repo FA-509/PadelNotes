@@ -4,119 +4,29 @@ import os
 import json
 import requests
 import base64
+import time
 from azure.cosmos import CosmosClient
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+URL = os.environ["URL"]
+KEY = os.environ["KEY"]
+client = CosmosClient(URL, credential=KEY)
+DATABASE_NAME = 'PadelNotesDB'
+database = client.get_database_client(DATABASE_NAME)
+CONTAINER_NAME = 'ImportGame'
+container = database.get_container_client(CONTAINER_NAME)
+last_challenge_container = database.get_container_client("LastChallengeGenerationTime")
+API_ENDPOINT = "https://uksouth.api.cognitive.microsoft.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2025-01-01-preview"
+AI_KEY = os.environ["OPENAI_KEY"]
 
-@app.route(route="import_game")
-@app.cosmos_db_output(arg_name="GameData", database_name="PadelNotesDB", 
-    container_name="ImportGame", connection="CosmosDBConnectionString")
+app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
-def importgame(req: func.HttpRequest, GameData: func.Out[func.Document]) -> func.HttpResponse:
-        json_content = req.get_json()
-        unique_id = str(uuid.uuid4())
-        json_content["id"] = unique_id
-
-        GameData.set(func.Document.from_dict(json_content))
-
-        return func.HttpResponse("Game Imported to Database")
-
-
-
-@app.route(route="get_user_match_history")
-
-def get_user_match_history(req: func.HttpRequest) -> func.HttpResponse:
-        headers_dict = dict(req.headers)
-        x_ms_client_principal_base64 = headers_dict["x-ms-client-principal"]
-        decoded_bytes = base64.b64decode(x_ms_client_principal_base64)
-        decoded_x_ms_client_principal = decoded_bytes.decode('utf-8')
-        decoded_x_ms_client_principal_dict = json.loads(decoded_x_ms_client_principal)
-        user_id = decoded_x_ms_client_principal_dict["userId"]
-
-        URL = os.environ["URL"]
-        KEY = os.environ["KEY"]
-        client = CosmosClient(URL, credential=KEY)
-        DATABASE_NAME = 'PadelNotesDB'
-        database = client.get_database_client(DATABASE_NAME)
-        CONTAINER_NAME = 'ImportGame'
-        container = database.get_container_client(CONTAINER_NAME)
-        player_match_history = []
-        for item in container.query_items(
-        query='SELECT * FROM r WHERE r.playerId = @userId',
-        parameters=[
-        dict(name='@userId', value=user_id)]):
-                player_match_history.append(item)
-        return func.HttpResponse(json.dumps(player_match_history, indent=True))
-
-                
-
-
-@app.route(route="find_game_via_id")
-@app.cosmos_db_input(arg_name="find_game", database_name="PadelNotesDB", 
-    container_name="ImportGame", connection="CosmosDBConnectionString")
-
-def find_game(req: func.HttpRequest, find_game: func.DocumentList) -> func.HttpResponse:
-        id = req.params.get("id")
-        for game in find_game:
-               if id == game["id"]:
-                       return func.HttpResponse(json.dumps(game, default=vars))
-  
-
-@app.route(route="edit_game")
-@app.cosmos_db_input(arg_name="read_game", database_name="PadelNotesDB", 
-    container_name="ImportGame", connection="CosmosDBConnectionString")
-@app.cosmos_db_output(arg_name="update_game", database_name="PadelNotesDB", 
-    container_name="ImportGame", connection="CosmosDBConnectionString")
-
-def edit_game(req: func.HttpRequest, read_game: func.DocumentList, update_game: func.Out[func.Document]) -> func.HttpResponse:
-        id = req.params.get("id")
-        json_content = req.get_json()
-        document_found = False
-        for game in read_game:
-                if id == game["id"]:
-                        document_found = True
-                        for key, value in json_content.items():
-                               if value != game[key]:
-                                      game[key] = value
-                        update_game.set(game)
-        if document_found == True:
-                job_status = "Matching Document Found"
-        else:
-                job_status = "No Matching Documents Found"
-        
-        return func.HttpResponse(job_status)
-
-
-@app.route(route="delete_game")
-@app.cosmos_db_input(arg_name="read_game", database_name="PadelNotesDB", 
-    container_name="ImportGame", connection="CosmosDBConnectionString")
-@app.cosmos_db_output(arg_name="delete_game", database_name="PadelNotesDB", 
-    container_name="ImportGame", connection="CosmosDBConnectionString")
-
-def delete_game(req: func.HttpRequest, read_game: func.DocumentList, delete_game: func.Out[func.Document]) -> func.HttpResponse:
-        URL = os.environ["URL"]
-        KEY = os.environ["KEY"]
-        client = CosmosClient(URL, credential=KEY)
-        DATABASE_NAME = 'PadelNotesDB'
-        database = client.get_database_client(DATABASE_NAME)
-        CONTAINER_NAME = 'ImportGame'
-        container = database.get_container_client(CONTAINER_NAME)
-        document_found = False
-        id = req.params.get("id")
-        for game in read_game:
-                if id == game["id"]:
-                        for item in container.query_items(parameters=[dict(name='@id', value=id)],query='SELECT * FROM ImportGame p WHERE p.id=@id',enable_cross_partition_query=True):
-                                container.delete_item(item, partition_key='1')
-                        return func.HttpResponse("Document Deleted")
-        return func.HttpResponse("Document Not Found")
-
-@app.route(route="generate_challenge")
-
-def generate_challenge(req: func.HttpRequest) -> func.HttpResponse:
-        API_ENDPOINT = "https://uksouth.api.cognitive.microsoft.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2025-01-01-preview"
-        AI_KEY = os.environ["OPANAI_KEY"]
-        bad_feedback = req.get_json()
-        bad_feedback
+def generate_challenge_ai(user_id,bad_feedback):
+        if "content" not in bad_feedback:
+                return "Invalid Request"
+        if not isinstance(bad_feedback["content"], str):
+                return "Invalid Request"
+        if bad_feedback["content"].strip() == "":
+                return "Invalid Request"
         ai_body = {
                 "messages": [
                                 { 
@@ -130,8 +40,133 @@ def generate_challenge(req: func.HttpRequest) -> func.HttpResponse:
                                                 ]
                                                 }
         ai_response = requests.post(API_ENDPOINT, json = ai_body, headers = {"api-key": AI_KEY,"Content-Type":"application/json"})
-        ai_response_json = ai_response.json()
-        return func.HttpResponse(ai_response_json["choices"][0]["message"]["content"])
+        if ai_response.status_code == 200:
+                ai_response_json = ai_response.json()
+                if "choices" not in ai_response_json:
+                        return "Invalid AI Response"
+                if not isinstance(ai_response_json["choices"], list):
+                        return "Invalid AI Response"
+                elif ai_response_json["choices"] == []:
+                        return "Invalid AI Response"
+                elif "message" not in ai_response_json["choices"][0]:
+                        return "Invalid AI Response"
+                elif "content" not in ai_response_json["choices"][0]["message"]:
+                        return "Invalid AI Response"
+                
+                return (ai_response_json["choices"][0]["message"]["content"])
+        return "AI Currently Offline"
 
 
+
+
+def last_challenge_generated_check(user_id):
+        for item in last_challenge_container.query_items(
+        query='SELECT * FROM r WHERE r.userId = @userId',
+        parameters=[
+        dict(name='@userId', value=user_id)]):
+                        return item
+        return None
+
+def last_challenge_generate_new_timestamp(user_id):
+        new_document = {}
+        new_document["id"] = user_id
+        new_document["userId"] = user_id
+        new_document["lastChallengeGeneratedTime"] = time.time()
+        last_challenge_container.upsert_item(new_document)
+        
+                
+
+def get_user_id(headers_dict):
+        x_ms_client_principal_base64 = headers_dict["x-ms-client-principal"]
+        decoded_bytes = base64.b64decode(x_ms_client_principal_base64)
+        decoded_x_ms_client_principal = decoded_bytes.decode('utf-8')
+        decoded_x_ms_client_principal_dict = json.loads(decoded_x_ms_client_principal)
+        return(decoded_x_ms_client_principal_dict["userId"])
+
+@app.route(route="get_user_match_history")
+def get_user_match_history(req: func.HttpRequest) -> func.HttpResponse:
+        headers_dict = dict(req.headers)
+        user_id = get_user_id(headers_dict)
+        player_match_history = []
+        for item in container.query_items(
+        query='SELECT * FROM r WHERE r.playerId = @userId',
+        parameters=[
+        dict(name='@userId', value=user_id)]):
+                player_match_history.append(item)
+        return func.HttpResponse(json.dumps(player_match_history, indent=True))
+
+@app.route(route="import_game")
+@app.cosmos_db_output(arg_name="GameData", database_name="PadelNotesDB", 
+    container_name="ImportGame", connection="CosmosDBConnectionString")
+
+def importgame(req: func.HttpRequest, GameData: func.Out[func.Document]) -> func.HttpResponse:
+        user_id = get_user_id(dict(req.headers))
+        json_content = req.get_json()
+        unique_id = str(uuid.uuid4())
+        json_content["playerId"] = user_id
+        json_content["id"] = unique_id
+
+        GameData.set(func.Document.from_dict(json_content))
+
+        return func.HttpResponse("Game Imported to Database")
+
+@app.route(route="find_game_via_id")
+def find_game(req: func.HttpRequest) -> func.HttpResponse:
+        headers_dict = dict(req.headers)
+        user_id = get_user_id(headers_dict)
+        id = req.params.get("id")
+        for item in container.query_items(
+        query='SELECT * FROM r WHERE r.playerId = @userId AND r.id = @matchId',
+        parameters=[{'name': '@matchId', "value": id}, {'name': '@userId', "value": user_id}]):
+                return func.HttpResponse(json.dumps(item, indent=True))
+        
+
+@app.route(route="edit_game")
+def edit_game(req: func.HttpRequest) -> func.HttpResponse:
+        job_status = None
+        user_id = get_user_id(dict(req.headers))
+        match_id = req.params.get("id")
+        json_content = req.get_json()
+        for item in container.query_items(query='SELECT * FROM r WHERE r.playerId = @userId AND r.id = @matchId',parameters=[{'name': '@matchId', "value": match_id}, {'name': '@userId', "value": user_id}]):
+                json_content["playerId"] = user_id
+                json_content["id"] = match_id
+                container.upsert_item(json_content)
+                job_status = "Matching Document Replaced"
+                break                 
+        if job_status == None:
+                job_status = "No Matching Documents Found"
+        return func.HttpResponse(job_status)
+
+@app.route(route="delete_game")
+def delete_game(req: func.HttpRequest) -> func.HttpResponse:
+        job_status = None
+        user_id = get_user_id(dict(req.headers))
+        match_id = req.params.get("id")
+        for item in container.query_items(query='SELECT * FROM r WHERE r.playerId = @userId AND r.id = @matchId',parameters=[{'name': '@matchId', "value": match_id}, {'name': '@userId', "value": user_id}]):
+                container.delete_item(match_id, partition_key=user_id)
+                job_status = "Document Deleted"
+                break
+        if job_status == None:
+                job_status = "No Matching Documents Found"
+        return func.HttpResponse(job_status)
+                
+@app.route(route="generate_challenge")
+def generate_challenge(req: func.HttpRequest) -> func.HttpResponse:
+        bad_feedback = req.get_json()
+        user_id = get_user_id(dict(req.headers))
+        last_generation_time_dict = last_challenge_generated_check(user_id)
+        if last_generation_time_dict is None:
+                last_challenge_generate_new_timestamp(user_id)
+                return func.HttpResponse(generate_challenge_ai(user_id,bad_feedback))
+        else:
+                last_time = last_generation_time_dict["lastChallengeGeneratedTime"]
+                if time.time() - last_time > 1:
+                        new_document = {}
+                        new_document["id"] = user_id
+                        new_document["userId"] = user_id
+                        new_document["lastChallengeGeneratedTime"] = time.time()
+                        last_challenge_container.upsert_item(new_document)
+                        return func.HttpResponse (generate_challenge_ai(user_id,bad_feedback))
+                else:
+                        return func.HttpResponse("Rate Limit Has Been Reached")
 

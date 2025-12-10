@@ -62,9 +62,7 @@ function colourResult(result) {
   }
   return colouredResult;
 }
-fetch(
-  "https://padelnotes-function-app001.azurewebsites.net/api/full_match_history"
-)
+fetch("http://localhost:4280/api/get_user_match_history")
   .then(function (response) {
     return response.json();
   })
@@ -74,9 +72,13 @@ fetch(
   .then(function (responseData) {
     let placeholder = document.querySelector("#table-data");
     let out = "";
-    const dataArray = responseData.data;
+    const dataArray = [];
+    for (let match of responseData) {
+      dataArray.push(match);
+    }
+    console.log(dataArray);
     newDateArray = dataArray.sort(
-      (a, b) => new Date(b.data.date) - new Date(a.data.date)
+      (a, b) => new Date(b.date) - new Date(a.date)
     );
 
     // ADD MATCHES TO MATCH HISTORY CARD IF LESS THAN OR EQUAL TO 4 MATCHES
@@ -84,9 +86,9 @@ fetch(
     lastFiveMatchesArray = [];
     if (newDateArray.length <= 4) {
       for (let match of newDateArray) {
-        let rawDate = match.data.date;
-        let rawResult = match.data.result;
-        let matchId = match.data.id;
+        let rawDate = match.date;
+        let rawResult = match.result;
+        let matchId = match.id;
         out += `
               <tr id="${matchId}">
                 <td style="text-align: left;">${dateFormatter(rawDate)}</td>
@@ -98,7 +100,7 @@ fetch(
       // IF 5 OR MORE MATCHES
     } else {
       for (let i = 0; i < 5; i++) {
-        lastFiveMatchesArray.push(newDateArray[i].data);
+        lastFiveMatchesArray.push(newDateArray[i]);
       }
       for (let match of lastFiveMatchesArray) {
         let rawDate = match.date;
@@ -120,20 +122,18 @@ fetch(
     const ratings = [];
     const startRating = "";
     for (let match of newDateArray) {
-      let rawDate = match.data.date;
-      let rawRating = match.data.rating;
+      let rawDate = match.date;
+      let rawRating = match.rating;
       dates.push(rawDate);
       ratings.push(rawRating);
     }
 
-    sortDates = dataArray.sort(
-      (a, b) => new Date(a.data.date) - new Date(b.data.date)
-    );
+    sortDates = dataArray.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     datesOrdered = [];
 
     for (let date of sortDates) {
-      datesOrdered.push(date.data.date);
+      datesOrdered.push(date.date);
     }
 
     // ADD START RATING TO DATES ARRAY
@@ -148,7 +148,7 @@ fetch(
     ratingsAdded.push(FloatRatingValue);
     let n = 0;
     for (let rating of sortDates) {
-      let floatRating = parseFloat(rating.data.rating);
+      let floatRating = parseFloat(rating.rating);
       let combinedRating = ratingsAdded[n] + floatRating;
       ratingsAdded.push(combinedRating);
       n = n + 1;
@@ -230,7 +230,7 @@ fetch(
           //     weight: "bold",
           //   },
           //   display: function (context) {
-          //     return context.dataIndex === lastArrayIndex - 1;
+          //     return contextIndex === lastArrayIndex - 1;
           //   },
           // },
           legend: {
@@ -253,7 +253,7 @@ fetch(
       count = lengthNewDateArray;
     }
     for (let i = 0; i < count; i++) {
-      badFeedbackArray.push(newDateArray[i].data.negativefeedback);
+      badFeedbackArray.push(newDateArray[i].negativefeedback);
     }
 
     // GENERATE CHALLENGE
@@ -265,16 +265,13 @@ fetch(
     challengeBtn = document.getElementById("btn-challenge");
 
     challengeBtn.addEventListener("click", (event) => {
-      fetch(
-        `https://padelnotes-function-app001.azurewebsites.net/api/generate_challenge`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(badFeedbackJson),
-        }
-      )
+      fetch(`http://localhost:4280/api/generate_challenge`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(badFeedbackJson),
+      })
         .then(function (response) {
           return response.json();
         })
@@ -286,7 +283,7 @@ fetch(
 
     console.log(badFeedbackJson);
 
-    // STORE CHALLENGE INTO LOCAL  STORAGE
+    // STORE CHALLENGE INTO LOCAL STORAGE
 
     const generated_challenge = localStorage.getItem("challenge");
     parsedJSON = JSON.parse(generated_challenge);
@@ -305,9 +302,7 @@ fetch(
     document.querySelector("#table-data").addEventListener("click", (event) => {
       let closestRow = event.target.closest("tr");
       let matchId = closestRow.id;
-      fetch(
-        `https://padelnotes-function-app001.azurewebsites.net/api/find_game_via_id?id=${matchId}`
-      )
+      fetch(`http://localhost:4280/api/find_game_via_id?id=${matchId}`)
         .then(function (response) {
           return response.json();
         })
@@ -316,17 +311,17 @@ fetch(
 
         .then(function (game_info) {
           document.getElementById("form-container").classList.add("open");
-          document.getElementById("date").value = game_info.data.date;
-          document.getElementById("time").value = game_info.data.time;
-          document.getElementById("location").value = game_info.data.location;
-          document.getElementById("duration").value = game_info.data.duration;
-          document.getElementById("result").value = game_info.data.result;
+          document.getElementById("date").value = game_info.date;
+          document.getElementById("time").value = game_info.time;
+          document.getElementById("location").value = game_info.location;
+          document.getElementById("duration").value = game_info.duration;
+          document.getElementById("result").value = game_info.result;
           document.getElementById("positivefeedback").value =
-            game_info.data.positivefeedback;
+            game_info.positivefeedback;
           document.getElementById("negativefeedback").value =
-            game_info.data.negativefeedback;
-          document.getElementById("matchid").value = game_info.data.id;
-          document.getElementById("rating").value = game_info.data.rating;
+            game_info.negativefeedback;
+          document.getElementById("matchid").value = game_info.id;
+          document.getElementById("rating").value = game_info.rating;
 
           // PUT NAMES AND SCORES INTO EDIT TABLE
 
@@ -337,16 +332,16 @@ fetch(
           {
             tableRows += `
         <tr>
-          <td scope="row">${game_info.data.teamaplayer1} / ${game_info.data.teamaplayer2}</td>
-          <td><input type="number" name="set1scorea" class="score-edit" value="${game_info.data.set1scorea}"></td>
-          <td><input type="number" name="set2scorea" class="score-edit" value="${game_info.data.set2scorea}"></td>
-          <td><input type="number" name="set3scorea" class="score-edit" value="${game_info.data.set3scorea}"></td>
+          <td scope="row">${game_info.teamaplayer1} / ${game_info.teamaplayer2}</td>
+          <td><input type="number" name="set1scorea" class="score-edit" value="${game_info.set1scorea}"></td>
+          <td><input type="number" name="set2scorea" class="score-edit" value="${game_info.set2scorea}"></td>
+          <td><input type="number" name="set3scorea" class="score-edit" value="${game_info.set3scorea}"></td>
         </tr>
         <tr>
-          <td scope="row">${game_info.data.teambplayer1} / ${game_info.data.teambplayer2}</td>
-          <td><input type="number" name="set1scoreb" class="score-edit" value="${game_info.data.set1scoreb}"></td>
-          <td><input type="number" name="set2scoreb" class="score-edit" value="${game_info.data.set2scoreb}"></td>
-          <td><input type="number" name="set3scoreb" class="score-edit" value="${game_info.data.set3scoreb}"></td>
+          <td scope="row">${game_info.teambplayer1} / ${game_info.teambplayer2}</td>
+          <td><input type="number" name="set1scoreb" class="score-edit" value="${game_info.set1scoreb}"></td>
+          <td><input type="number" name="set2scoreb" class="score-edit" value="${game_info.set2scoreb}"></td>
+          <td><input type="number" name="set3scoreb" class="score-edit" value="${game_info.set3scoreb}"></td>
         </tr>
           `;
           }
@@ -365,16 +360,13 @@ fetch(
       let match_edit = Object.fromEntries(formData_edit);
       document.getElementById("form-container").classList.remove("open");
 
-      fetch(
-        `https://padelnotes-function-app001.azurewebsites.net/api/edit_game?id=${matchId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(match_edit),
-        }
-      ).then(function () {
+      fetch(`http://localhost:4280/api/edit_game?id=${matchId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(match_edit),
+      }).then(function () {
         window.location.reload();
       });
     });
@@ -386,12 +378,12 @@ fetch(
     deleteBtn.addEventListener("click", () => {
       const matchIdInput = document.getElementById("matchid");
       const matchId = matchIdInput.value;
-      fetch(
-        `https://padelnotes-function-app001.azurewebsites.net/api/delete_game?id=${matchId}`
-      ).then(function () {
-        document.getElementById("form-container").classList.remove("open");
-        window.location.reload();
-      });
+      fetch(`http://localhost:/api/delete_game?id=${matchId}`).then(
+        function () {
+          document.getElementById("form-container").classList.remove("open");
+          window.location.reload();
+        }
+      );
     });
 
     // IMPORT A GAME
@@ -433,16 +425,13 @@ fetch(
       const formData = new FormData(importGameForm);
       const data = Object.fromEntries(formData);
 
-      fetch(
-        "https://padelnotes-function-app001.azurewebsites.net/api/import_game",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      ).then(function () {
+      fetch("http://localhost:4280/api/import_game", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }).then(function () {
         document
           .getElementById("importgame-container")
           .classList.remove("open");
