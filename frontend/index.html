@@ -4,9 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
-    <link rel="icon" type="image/x-icon" href="/frontend/images/favicon.ico">
-    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/index.css" />
+
   </head>
   <body>
     <!-- NAVBAR -->
@@ -47,10 +49,10 @@
         
         <div class="d-flex gap-2">
         <div class="settings-icon">
-        <img src="/frontend/images/settings icon.svg" width="21" height="21" alt="" class="d-inline-block me-2" id="settings-icon"></img>
+        <img src="images/settings icon.svg" width="21" height="21" alt="" class="d-inline-block me-2" id="settings-icon"></img>
         </div>
         <div class="user-icon">
-        <img src="/frontend/images/user.svg" width="21" height="21" alt="" id="user-icon"></img>
+        <img src="images/user.svg" width="21" height="21" alt="" id="user-icon"></img>
         </div>
       </div>
       </div>    
@@ -64,10 +66,217 @@
         <p style="font-weight: 250; color: #45546c;">Here's your performance overview</p>
       </div>
             <div class="col-auto" id="log-new-match-container">
-              <button type="button" class="log-new-match-btn"><span class="plus-sign">+</span> &nbsp;&nbsp;Log New Match</button>
+              <button type="button" class="log-new-match-btn" data-bs-toggle="modal" data-bs-target="#importGameForm"><span class="plus-sign">+</span> &nbsp;&nbsp;Log New Match</button>
       </div>
     </div>
     </div>
+
+<!-- Import a Game Form -->
+<div class="modal fade" id="importGameForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="import-game-title-section">
+          <div class="import-game-left">
+            <img src="images/blue-trophy.svg" width="50px" height="50px" alt="" id="log-new-match-icon">
+        <div>
+        <h1 class="modal-title fs-5" id="modal-title">Log New Match</h1>
+        <p id="modal-sub-title">Enter match details and scores to track your progress</p>
+        </div>
+        </div>
+         <p id="new-entry-pill">New Entry</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p class="sub-titles">MATCH DETAILS</p>
+
+        <form id="importgame-form">
+                <div class="row-4">
+
+        <div class="input-container">
+                        <div class="date-title">
+        <img src="images/calendar-grey.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">DATE</span>
+        </div>
+        <input id="dateInput" class="importgame-input" name="date" type="date">
+        </div>
+
+
+
+<div class="input-container">
+                                <div class="time-title">
+        <img src="images/clock.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">TIME</span>
+        </div>
+        <input class="importgame-input" name="time" type="time">
+        </div>
+
+
+        <div class="input-container">
+                                        <div class="duration-title">
+        <img src="images/clock.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">DURATION</span>
+        </div>
+        <select name="duration" class="importgame-input" name="time" type="time">
+          <option value="60">60m</option>
+          <option value="90">90m</option>
+          <option value="120">120m</option>
+        </select>
+        </div>
+
+
+        <div class="input-container">
+                        <div class="location-title">
+        <img src="images/map-pin.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">LOCATION</span>
+        </div>
+        <input class="importgame-input" name="location" type="text" placeholder="London">
+        </div>
+        </div>
+
+          <div class="row-5">
+<div class="input-container">
+        <div class="my-team-title">
+        <img src="images/grey-users.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">MY TEAM</span>
+        </div>
+        <input id="myTeam" class="importgame-input" name="myTeam" type="text" placeholder="Smith & Jones">
+        </div>
+
+
+<div class="input-container">
+                <div class="opponents-title">
+        <img src="images/shield.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">OPPONENTS</span>
+        </div>
+        <input id="myOpponents" class="importgame-input" name="myOpponents" type="text" placeholder="Jack & Lee">
+        </div>
+
+        <div class="input-container">
+                        <div class="matchtype-title">
+        <img src="images/medal.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">MATCH TYPE</span>
+                        </div>
+        <select id="matchTypeInput" class="importgame-input" name="MatchType" type="text">
+                  <option value="Friendly">Friendly</option>
+          <option value="Competitive">Competitive</option>
+        </select>
+        </div>
+
+        <div class="input-container">
+                <div class="rating-title">
+        <img src="images/trending-up-down.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">RATING</span>
+        </div>
+        <input id="inputRating" class="importgame-input" name="rating" type="text" placeholder="0.04">
+        </div>
+
+                <div class="input-container">
+                                        <div class="result-title">
+        <img src="images/circle-star.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">RESULT</span>
+        </div>
+        <select name="result" id="resultId" class="importgame-input" name="time" type="time">
+          <option value="Win">Win</option>
+          <option value="Loss">Loss</option>
+          <option value="Draw">Draw</option>
+        </select>
+        </div>
+
+
+
+
+
+        </div>
+
+
+              <p id="set-scores-title" class="sub-titles">SET SCORES</p>
+
+              <div class="set-scores-card">
+                <div class="row-4-scoreboard">
+                  <div class="input-container-subtitle">
+                <span>PAIR</span>
+                <input id="pairInput" type="text" readonly class="name-readonly">
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores">SET 1</span>
+                <input name="myTeamSet1" id="myTeamSet1" class="importgame-input-scores" type="number" />
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores">SET 2</span>
+                <input name="myTeamSet2" id="myTeamSet2" class="importgame-input-scores" type="number" />
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores">SET 3</span>
+                <input name="myTeamSet3" id="myTeamSet3" class="importgame-input-scores" type="number" />
+                </div>
+                </div>
+
+                                <div class="row-4-scoreboard">
+                  <div class="input-container-subtitle">
+                <span id="pair-subtitle">PAIR</span>
+                <input id="pairInput2" type="text" readonly class="name-readonly">
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores-hidden">SET 1</span>
+                <input name="myOpponentsSet1" id="myOpponentsSet1" class="importgame-input-scores" type="number"  />
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores-hidden">SET 2</span>
+                <input name="myOpponentsSet2" id="myOpponentsSet2" class="importgame-input-scores" type="number"  />
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores-hidden">SET 3</span>
+                <input name="myOpponentsSet3" id="myOpponentsSet3" class="importgame-input-scores" type="number" />
+                </div>
+                </div>
+              </div>
+
+
+ <p class="sub-titles">MATCH SUMMARY</p>
+
+     <div id="result-card" class="win-result-card">
+    <div class="date-result-container">
+    <div class="game-date">
+      <img src="images/calendar.svg" width="17" height="17" alt="">
+      <p id="previewCardDate"></p>
+    </div>
+    <p id="resultPill" class="win-result">Win</p>
+    </div>
+    <div class="players-names">
+      <img src="images/users.svg" width="17" height="17" alt="">
+      <p id="opponentsNames"></p>
+    </div>
+    <hr class="solid">
+    <div class="score-rating-container">
+      <p id="previewCardScore"></p>
+      <div id="previewCardRatingContainer" class="win-rating">
+        <p><img id="previewCardRatingIcon" src="images/trending-up.svg" width="17" height="17" alt=""> <span id="previewCardRating"></span></p>
+      </div>
+      
+    </div>
+    </div>
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="importFormCancelBtn" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button id="logMatchBtn" type="submit" class="btn btn-primary">Log Match</button>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
     <!-- FOUR CARDS -->
      <div class="four-cards">
@@ -77,12 +286,12 @@
      <div class="rating-card">
   <div class="card-body">
     <div class="rating-icon-box">
-    <img src="/frontend/images/award.svg" width="21" height="21" alt="" id="trending-up-icon"></img>
+    <img src="images/award.svg" width="21" height="21" alt="" id="trending-up-icon"></img>
     </div>
     <div>
     <p class="card-text">CURRENT RATING</p>
     <p class="rating-number">2.45</p>
-    <p class="rating-stat"><img src="/frontend/images/award.svg" width="15" height="15" alt=""> Intermediate</p>
+    <p class="rating-stat"><img src="images/award.svg" width="15" height="15" alt=""> Intermediate</p>
     </div>
   </div>
   </div>
@@ -91,12 +300,12 @@
      <div class="winrate-card">
   <div class="card-body">
     <div class="winrate-icon-box">
-    <img src="/frontend/images/trending-up.svg" width="21" height="21" alt="" id="trending-up-icon"></img>
+    <img src="images/trending-up.svg" width="21" height="21" alt="" id="trending-up-icon"></img>
     </div>
     <div>
     <p class="card-text">WIN RATE</p>
     <p class="winrate-number">62.5%</p>
-    <p class="winrate-stat"><img src="/frontend/images/trending-up.svg" width="15" height="15" alt=""> +5% this month</p>
+    <p class="winrate-stat"><img src="images/trending-up.svg" width="15" height="15" alt=""> +5% this month</p>
     </div>
   </div>
   </div>
@@ -106,7 +315,7 @@
      <div class="total-matches-card">
   <div class="card-body">
     <div class="total-matches-icon-box">
-    <img src="/frontend/images/trophy.svg" width="21" height="21" alt="" id="trending-up-icon"></img>
+    <img src="images/trophy.svg" width="21" height="21" alt="" id="trending-up-icon"></img>
     </div>
     <div>
     <p class="card-text">TOTAL MATCHES</p>
@@ -121,7 +330,7 @@
      <div class="winstreak-card">
   <div class="card-body">
     <div class="winstreak-icon-box">
-    <img src="/frontend/images/flame.svg" width="21" height="21" alt="" id="trending-up-icon"></img>
+    <img src="images/flame.svg" width="21" height="21" alt="" id="trending-up-icon"></img>
     </div>
     <div>
     <p class="card-text">WIN STREAK</p>
@@ -143,7 +352,7 @@
      <div class="ai-card">
   <div class="card-body">
     <div class="ai-title">
-         <img src="/frontend/images/sparkles.svg" width="14" height="14" alt="" id="sparkles-icon"></img>
+         <img src="images/sparkles.svg" width="14" height="14" alt="" id="sparkles-icon"></img>
          <p>AI CHALLENGE</p>
     </div>
     <div class="sub-title">
@@ -152,7 +361,7 @@
     </div>
     <div class="challenge-goal-container">
     <div class="challenge-goal-title-container">
-               <img src="/frontend/images/target.svg" width="14" height="14" alt="" id="sparkles-icon"></img>
+               <img src="images/target.svg" width="14" height="14" alt="" id="sparkles-icon"></img>
          <p>CHALLENGE GOAL</p>
     </div>
     <p id="challenge-text">During your next match, focus on assessing the positioning of your opponents before attempting a lob. Aim to hit lobs only when you are sure it will create an advantageous situation or force a weak return.</p>
@@ -165,7 +374,7 @@
   <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
 </div>
     
-    <button type="button" class="regenerate-challenge-btn"><img src="/frontend/images/refresh-cw.svg" width="14" height="14" alt="" id="sparkles-icon"></img><span>&nbsp Regenerate Challenge</span></button>
+    <button type="button" class="regenerate-challenge-btn"><img src="images/refresh-cw.svg" width="14" height="14" alt="" id="sparkles-icon"></img><span>&nbsp Regenerate Challenge</span></button>
   </div>
   </div>
 
@@ -174,11 +383,11 @@
     <div class="chart-title">
    <div class="text-container">
     <div class="chart-icon-box">
-    <img src="/frontend/images/chart-trending-up.svg" width="17" height="17" alt="" id="chart-trending-up-icon"></img>
+    <img src="images/chart-trending-up.svg" width="17" height="17" alt="" id="chart-trending-up-icon"></img>
      </div>
           <h2>Rating Progress</h2>
     </div>
-    <p class="chart-stat"><img src="/frontend/images/trending-up.svg" width="15" height="15" alt=""> +22.5%</p>
+    <p class="chart-stat"><img src="images/trending-up.svg" width="15" height="15" alt=""> +22.5%</p>
     </div>
     <div class="chart-text">
     <p id="chart-text-heading">2.45</p>
@@ -207,7 +416,7 @@
     <div class="group-text">
       <div class="text-container">
     <div class="recent-matches-icon-box">
-    <img src="/frontend/images/trophy.svg" width="17" height="17" alt="" id="trending-up-icon"></img>
+    <img src="images/trophy.svg" width="17" height="17" alt="" id="trending-up-icon"></img>
      </div>
           <h2>Recent Matches</h2>
     </div>
@@ -216,20 +425,20 @@
     <div class="win-result-card">
     <div class="date-result-container">
     <div class="game-date">
-      <img src="/frontend/images/calendar.svg" width="17" height="17" alt="">
+      <img src="images/calendar.svg" width="17" height="17" alt="">
       <p>Dec 7, 2025</p>
     </div>
     <p class="win-result">Win</p>
     </div>
     <div class="players-names">
-      <img src="/frontend/images/users.svg" width="17" height="17" alt="">
+      <img src="images/users.svg" width="17" height="17" alt="">
       <p>vs Miguel P & Sofia L</p>
     </div>
     <hr class="solid">
     <div class="score-rating-container">
       <p>6-4, 6-3</p>
       <div class="win-rating">
-        <p><img src="/frontend/images/trending-up.svg" width="17" height="17" alt="">&nbsp +0.07</p>
+        <p><img src="images/trending-up.svg" width="17" height="17" alt="">&nbsp +0.07</p>
       </div>
       
     </div>
@@ -238,20 +447,20 @@
     <div class="win-result-card">
     <div class="date-result-container">
     <div class="game-date">
-      <img src="/frontend/images/calendar.svg" width="17" height="17" alt="">
+      <img src="images/calendar.svg" width="17" height="17" alt="">
       <p>Dec 5, 2025</p>
     </div>
     <p class="win-result">Win</p>
     </div>
     <div class="players-names">
-      <img src="/frontend/images/users.svg" width="17" height="17" alt="">
+      <img src="images/users.svg" width="17" height="17" alt="">
       <p>vs Daniel R & Laura M</p>
     </div>
     <hr class="solid">
     <div class="score-rating-container">
       <p>7-5, 6-4</p>
       <div class="win-rating">
-        <p><img src="/frontend/images/trending-up.svg" width="17" height="17" alt="">&nbsp +0.12</p>
+        <p><img src="images/trending-up.svg" width="17" height="17" alt="">&nbsp +0.12</p>
       </div>
     </div>
     </div>
@@ -260,20 +469,20 @@
         <div class="win-result-card">
     <div class="date-result-container">
     <div class="game-date">
-      <img src="/frontend/images/calendar.svg" width="17" height="17" alt="">
+      <img src="images/calendar.svg" width="17" height="17" alt="">
       <p>Dec 3, 2025</p>
     </div>
     <p class="win-result">Win</p>
     </div>
     <div class="players-names">
-      <img src="/frontend/images/users.svg" width="17" height="17" alt="">
+      <img src="images/users.svg" width="17" height="17" alt="">
       <p>vs Javier C & Elena T</p>
     </div>
     <hr class="solid">
     <div class="score-rating-container">
       <p>6-3, 4-6, 10-7</p>
       <div class="win-rating">
-        <p><img src="/frontend/images/trending-up.svg" width="17" height="17" alt="">&nbsp +0.06</p>
+        <p><img src="images/trending-up.svg" width="17" height="17" alt="">&nbsp +0.06</p>
       </div>
       
     </div>
@@ -282,20 +491,20 @@
         <div class="draw-result-card">
     <div class="date-result-container">
     <div class="game-date">
-      <img src="/frontend/images/calendar.svg" width="17" height="17" alt="">
+      <img src="images/calendar.svg" width="17" height="17" alt="">
       <p>Nov 30, 2025</p>
     </div>
     <p class="draw-result">Draw</p>
     </div>
     <div class="players-names">
-      <img src="/frontend/images/users.svg" width="17" height="17" alt="">
+      <img src="images/users.svg" width="17" height="17" alt="">
       <p>vs Andres G & Paula V</p>
     </div>
     <hr class="solid">
     <div class="score-rating-container">
       <p>6-4, 4-6</p>
       <div class="draw-rating">
-        <p><img src="/frontend/images/minus.svg" width="17" height="17" alt="">&nbsp 0</p>
+        <p><img src="images/minus.svg" width="17" height="17" alt="">&nbsp 0</p>
       </div>
   </div>
   </div>
@@ -304,20 +513,20 @@
       <div class="loss-result-card">
     <div class="date-result-container">
     <div class="game-date">
-      <img src="/frontend/images/calendar.svg" width="17" height="17" alt="">
+      <img src="images/calendar.svg" width="17" height="17" alt="">
       <p>Nov 27, 2025</p>
     </div>
     <p class="loss-result">Loss</p>
     </div>
     <div class="players-names">
-      <img src="/frontend/images/users.svg" width="17" height="17" alt="">
+      <img src="images/users.svg" width="17" height="17" alt="">
       <p>vs Marco F & Lucia B</p>
     </div>
     <hr class="solid">
     <div class="score-rating-container">
       <p>4-6, 3-6</p>
       <div class="loss-rating">
-        <p><img src="/frontend/images/trending-down.svg" width="17" height="17" alt="">&nbsp -0.04</p>
+        <p><img src="images/trending-down.svg" width="17" height="17" alt="">&nbsp -0.04</p>
       </div>
       
   </div>
@@ -325,264 +534,15 @@
 </div>
 
 
-<!-- EDIT GAME FORM -->
- <div class="form-container" id="form-container">
-  <div class="edit-game-boarder">
-    <form id="editgame_form">
-      <h4>Edit Game</h4>
-      <div class="row">
-        <div class="col">
-          <div class="form-group">
-            <label for="date">Date</label>
-            <input type="date" id="date" name="date" class="form-control">
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group">
-            <label for="time">Time</label>
-            <input type="time" id="time" name="time" class="form-control">
-          </div>
-        </div>
-      </div>
-
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="location">Location</label>
-        <input type="text" id="location" name="location" class="form-control">
-      </div>
-    </div>
-    <div class="col">
-      <div class="form-group">
-        <label for="duration">Duration</label>
-        <select name="duration" id="duration" name="duration" class="form-control">
-          <option value="60">60m</option>
-          <option value="90">90m</option>
-          <option value="120">120m</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="duration">Match Type</label>
-        <select name="matchtype" id="match-type" class="form-control">
-          <option value="Friendly">Friendly</option>
-          <option value="Competitive">Competitive</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <td scope="col" id="score">Score</td>
-            <td scope="col">Set 1</td>
-            <td scope="col">Set 2</td>
-            <td scope="col">Set 3</td>
-          </tr>
-        </thead>
-        <tbody id="editform-table-data">
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="result">Result</label>
-        <select name="result" id="result" class="form-control">
-          <option value="Win">Win</option>
-          <option value="Loss">Loss</option>
-          <option value="Draw">Draw</option>
-        </select>
-      </div>
-    </div>
-        <div class="col">
-      <div class="form-group">
-        <label for="rating">Rating</label>
-     <input type="text" id="rating" name="rating" class="form-control">
-      </div>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="good-feedback">What Went Well?</label>
-        <input type="text" id="positivefeedback" name="positivefeedback" class="form-control">
-      </div>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="bad-feedback">What Went Bad?</label>
-        <input type="text" id="negativefeedback" name="negativefeedback" class="form-control">
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="button-container">
-      <input class="btn btn-primary" type="submit" value="Save" id="save-button">
-      <button type="button" class="btn btn-danger" id="delete-btn">Delete</button>
-      <input type="hidden" id="matchid"/>
-    </div>
-  </div>
-</form>
-</div>
-</div>
-
-<!-- SETTINGS PANEL -->
-
-      <div class="settings-container" id="settings-container">
-        <div class="settings-window">
-        <h4>Settings</h4>
-        <div>
-          <label for="">Start Rating</label>
-          <input type="number" placeholder="0" id="start-rating">
-        </div>
-        <div class="button-container">
-          <input class="btn btn-primary" type="submit" value="Save" id="setting-save-button">
-        </div>
-        </div>
-      </div>
-
-<!-- IMPORT A GAME FORM -->
-
-<div class="importgame-container" id="importgame-container">
-  <div class="import-game-boarder">
-    <form id="importgame-form">
-           <h4>Import Game</h4>
-      <div class="row">
-        <div class="col">
-          <div class="form-group">
-            <label for="date">Date</label>
-            <input type="date" id="date" name="date" class="form-control">
-          </div>
-        </div>
-        <div class="col">
-          <div class="form-group">
-            <label for="time">Time</label>
-            <input type="time" id="time" name="time" class="form-control">
-          </div>
-        </div>
-      </div>
-
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="location">Location</label>
-        <input type="text" id="location" name="location" class="form-control">
-      </div>
-    </div>
-    <div class="col">
-      <div class="form-group">
-        <label for="duration">Duration</label>
-        <select name="duration" id="duration" name="duration" class="form-control">
-          <option value="60">60m</option>
-          <option value="90">90m</option>
-          <option value="120">120m</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="duration">Match Type</label>
-        <select name="matchtype" id="match-type" class="form-control">
-          <option value="Friendly">Friendly</option>
-          <option value="Competitive">Competitive</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <td scope="col" id="score">Score</td>
-            <td scope="col">Set 1</td>
-            <td scope="col">Set 2</td>
-            <td scope="col">Set 3</td>
-          </tr>
-        </thead>
-        <tbody id="importform-table-data">
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="result">Result</label>
-        <select name="result" id="result" class="form-control">
-          <option value="Win">Win</option>
-          <option value="Loss">Loss</option>
-          <option value="Draw">Draw</option>
-        </select>
-      </div>
-    </div>
-        <div class="col">
-      <div class="form-group">
-        <label for="rating">Rating</label>
-     <input type="text" id="rating" name="rating" class="form-control">
-      </div>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="good-feedback">What Went Well?</label>
-        <input type="text" id="positivefeedback" name="positivefeedback" class="form-control">
-      </div>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <label for="bad-feedback">What Went Bad?</label>
-        <input type="text" id="negativefeedback" name="negativefeedback" class="form-control">
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="button-container">
-      <input class="btn btn-primary" type="submit" value="Save" id="save-button">
-      <input type="hidden" id="matchid"/>
-    </div>
-  </div>
-</form>
-</div>
-</div>
-
-
-    </form>
-  </div>
-</div>
 
 
    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" integrity="sha512-Y51n9mtKTVBh3Jbx5pZSJNDDMyY+yGe77DGtBPzRlgsf/YLCh13kSZ3JmfHGzYFCmOndraf0sQgfM654b7dJ3w==" crossorigin="anonymous" 
     referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="js/live-demo-chart.js"></script>
      <script src="js/live-demo-script.js"></script>
+     <script src="js/script.js"></script>
   </body>
 </html>
