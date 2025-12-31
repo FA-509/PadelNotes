@@ -170,3 +170,9 @@
   height: 35px;
   width: 100%;
 }
+
+#recentMatchesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}

@@ -422,114 +422,34 @@
     </div>
       <a href="url">View all →</a>
     </div>
+
+
+    <div id="recentMatchesContainer"></div>
+
+
+<template id="matchCardTemplate">
     <div class="win-result-card">
     <div class="date-result-container">
     <div class="game-date">
       <img src="images/calendar.svg" width="17" height="17" alt="">
-      <p>Dec 7, 2025</p>
+      <p class="card-date"></p>
     </div>
-    <p class="win-result">Win</p>
+    <p class="win-result"></p>
     </div>
     <div class="players-names">
       <img src="images/users.svg" width="17" height="17" alt="">
-      <p>vs Miguel P & Sofia L</p>
+      <p id="opponentsNames"></p>
     </div>
     <hr class="solid">
     <div class="score-rating-container">
-      <p>6-4, 6-3</p>
+      <p class="card-score"></p>
       <div class="win-rating">
-        <p><img src="images/trending-up.svg" width="17" height="17" alt="">&nbsp +0.07</p>
-      </div>
-      
-    </div>
-    </div>
-
-    <div class="win-result-card">
-    <div class="date-result-container">
-    <div class="game-date">
-      <img src="images/calendar.svg" width="17" height="17" alt="">
-      <p>Dec 5, 2025</p>
-    </div>
-    <p class="win-result">Win</p>
-    </div>
-    <div class="players-names">
-      <img src="images/users.svg" width="17" height="17" alt="">
-      <p>vs Daniel R & Laura M</p>
-    </div>
-    <hr class="solid">
-    <div class="score-rating-container">
-      <p>7-5, 6-4</p>
-      <div class="win-rating">
-        <p><img src="images/trending-up.svg" width="17" height="17" alt="">&nbsp +0.12</p>
+        <p class="card-rating"><img class="rating-icon" src="images/trending-up.svg" width="17" height="17" alt=""><span id="ratingNumber"></span></p>
       </div>
     </div>
     </div>
-
-
-        <div class="win-result-card">
-    <div class="date-result-container">
-    <div class="game-date">
-      <img src="images/calendar.svg" width="17" height="17" alt="">
-      <p>Dec 3, 2025</p>
-    </div>
-    <p class="win-result">Win</p>
-    </div>
-    <div class="players-names">
-      <img src="images/users.svg" width="17" height="17" alt="">
-      <p>vs Javier C & Elena T</p>
-    </div>
-    <hr class="solid">
-    <div class="score-rating-container">
-      <p>6-3, 4-6, 10-7</p>
-      <div class="win-rating">
-        <p><img src="images/trending-up.svg" width="17" height="17" alt="">&nbsp +0.06</p>
-      </div>
-      
-    </div>
-    </div>
-
-        <div class="draw-result-card">
-    <div class="date-result-container">
-    <div class="game-date">
-      <img src="images/calendar.svg" width="17" height="17" alt="">
-      <p>Nov 30, 2025</p>
-    </div>
-    <p class="draw-result">Draw</p>
-    </div>
-    <div class="players-names">
-      <img src="images/users.svg" width="17" height="17" alt="">
-      <p>vs Andres G & Paula V</p>
-    </div>
-    <hr class="solid">
-    <div class="score-rating-container">
-      <p>6-4, 4-6</p>
-      <div class="draw-rating">
-        <p><img src="images/minus.svg" width="17" height="17" alt="">&nbsp 0</p>
-      </div>
-  </div>
-  </div>
-
-
-      <div class="loss-result-card">
-    <div class="date-result-container">
-    <div class="game-date">
-      <img src="images/calendar.svg" width="17" height="17" alt="">
-      <p>Nov 27, 2025</p>
-    </div>
-    <p class="loss-result">Loss</p>
-    </div>
-    <div class="players-names">
-      <img src="images/users.svg" width="17" height="17" alt="">
-      <p>vs Marco F & Lucia B</p>
-    </div>
-    <hr class="solid">
-    <div class="score-rating-container">
-      <p>4-6, 3-6</p>
-      <div class="loss-rating">
-        <p><img src="images/trending-down.svg" width="17" height="17" alt="">&nbsp -0.04</p>
-      </div>
-      
-  </div>
+</template>
+</div>
 </div>
 </div>
 

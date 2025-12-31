@@ -236,3 +236,106 @@ importGameForm.addEventListener("submit", (event) => {
 });
 
 // RECENT GAMES
+
+// GET USER'S MATCH HISTORY FROM API
+
+const dataArray = [];
+
+fetch("http://localhost:4280/api/get_user_match_history")
+  .then(function (response) {
+    return response.json();
+  })
+  .then(function (responseData) {
+    const matchesSortedByDate = responseData.sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+    //   GRAB LATEST 5 MATCHES
+    const lastFiveMatchesArray = matchesSortedByDate.slice(0, 5);
+    console.log(lastFiveMatchesArray);
+
+    // RENDER LAST 5 MATCHES TO RECENT GAMES
+
+    const matchCardTemplate = document.getElementById("matchCardTemplate");
+    const docFrag = document.createDocumentFragment();
+    const recentMatchesContainer = document.getElementById(
+      "recentMatchesContainer"
+    );
+
+    for (let match of lastFiveMatchesArray) {
+      const clonedCardTemplate = matchCardTemplate.content.cloneNode(true);
+      const resultCard = clonedCardTemplate.querySelector(".win-result-card");
+      const resultLabel = clonedCardTemplate.querySelector(".win-result");
+      const opponentsNames =
+        clonedCardTemplate.querySelector("#opponentsNames");
+      const cardScore = clonedCardTemplate.querySelector(".card-score");
+      const ratingResult = clonedCardTemplate.querySelector(".win-rating");
+      const ratingIcon = clonedCardTemplate.querySelector(".rating-icon");
+      const ratingNumber = clonedCardTemplate.querySelector("#ratingNumber");
+
+      resultCard.classList.remove("win-result-card");
+      resultLabel.classList.remove("win-result");
+      ratingResult.classList.remove("win-rating");
+
+      const result = match.result;
+      const rawDate = match.date;
+      const rating = match.rating;
+      const myOpponents = match.myOpponents;
+      const myTeamSet1Score = match.myTeamSet1;
+      const myTeamSet2Score = match.myTeamSet2;
+      const myTeamSet3Score = match.myTeamSet3;
+
+      const myOpponentsSet1Score = match.myOpponentsSet1;
+      const myOpponentsSet2Score = match.myOpponentsSet2;
+      const myOpponentsSet3Score = match.myOpponentsSet3;
+
+      let set1ValueA = myTeamSet1Score.trim();
+      let set2ValueA = myTeamSet2Score.trim();
+      let set3ValueA = myTeamSet3Score.trim();
+      let set1ValueB = myOpponentsSet1Score.trim();
+      let set2ValueB = myOpponentsSet2Score.trim();
+      let set3ValueB = myOpponentsSet3Score.trim();
+      const sets = [];
+      if (set1ValueA !== "" && set1ValueB !== "") {
+        sets.push(set1ValueA + "-" + set1ValueB);
+      }
+
+      if (set2ValueA !== "" && set2ValueB !== "") {
+        sets.push(" " + set2ValueA + "-" + set2ValueB);
+      }
+
+      if (set3ValueA !== "" && set3ValueB !== "") {
+        sets.push(" " + set3ValueA + "-" + set3ValueB);
+      }
+
+      if (result === "Loss") {
+        resultCard.classList.add("loss-result-card");
+        resultLabel.classList.add("loss-result");
+        ratingResult.classList.add("loss-rating");
+        ratingNumber.textContent = " -" + rating;
+        ratingIcon.src = "images/trending-down.svg";
+      } else if (result === "Draw") {
+        resultCard.classList.add("draw-result-card");
+        resultLabel.classList.add("draw-result");
+        ratingResult.classList.add("draw-rating");
+        ratingNumber.textContent = rating;
+        ratingIcon.src = "images/minus.svg";
+      } else if (result === "Win") {
+        resultCard.classList.add("win-result-card");
+        resultLabel.classList.add("win-result");
+        ratingResult.classList.add("win-rating");
+        ratingNumber.textContent = " +" + rating;
+        ratingIcon.src = "images/trending-up.svg";
+      }
+
+      resultLabel.textContent = result;
+      opponentsNames.textContent = "vs " + myOpponents;
+      cardScore.textContent = sets;
+
+      const cardDate = clonedCardTemplate.querySelector(".card-date");
+      cardDate.textContent = dateFormatter(rawDate);
+
+      docFrag.appendChild(clonedCardTemplate);
+    }
+
+    recentMatchesContainer.appendChild(docFrag);
+  });
