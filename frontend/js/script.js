@@ -246,12 +246,11 @@ fetch("http://localhost:4280/api/get_user_match_history")
     return response.json();
   })
   .then(function (responseData) {
-    const matchesSortedByDate = responseData.sort(
+    const matchesSortedByDateDesc = responseData.sort(
       (a, b) => new Date(b.date) - new Date(a.date)
     );
     //   GRAB LATEST 5 MATCHES
-    const lastFiveMatchesArray = matchesSortedByDate.slice(0, 5);
-    console.log(lastFiveMatchesArray);
+    const lastFiveMatchesArray = matchesSortedByDateDesc.slice(0, 5);
 
     // RENDER LAST 5 MATCHES TO RECENT GAMES
 
@@ -266,11 +265,11 @@ fetch("http://localhost:4280/api/get_user_match_history")
       const resultCard = clonedCardTemplate.querySelector(".win-result-card");
       const resultLabel = clonedCardTemplate.querySelector(".win-result");
       const opponentsNames =
-        clonedCardTemplate.querySelector("#opponentsNames");
+        clonedCardTemplate.querySelector(".opponentsNames");
       const cardScore = clonedCardTemplate.querySelector(".card-score");
       const ratingResult = clonedCardTemplate.querySelector(".win-rating");
       const ratingIcon = clonedCardTemplate.querySelector(".rating-icon");
-      const ratingNumber = clonedCardTemplate.querySelector("#ratingNumber");
+      const ratingNumber = clonedCardTemplate.querySelector(".ratingNumber");
 
       resultCard.classList.remove("win-result-card");
       resultLabel.classList.remove("win-result");
@@ -279,6 +278,7 @@ fetch("http://localhost:4280/api/get_user_match_history")
       const result = match.result;
       const rawDate = match.date;
       const rating = match.rating;
+      const matchType = match.matchType;
       const myOpponents = match.myOpponents;
       const myTeamSet1Score = match.myTeamSet1;
       const myTeamSet2Score = match.myTeamSet2;
@@ -311,20 +311,31 @@ fetch("http://localhost:4280/api/get_user_match_history")
         resultCard.classList.add("loss-result-card");
         resultLabel.classList.add("loss-result");
         ratingResult.classList.add("loss-rating");
-        ratingNumber.textContent = " -" + rating;
-        ratingIcon.src = "images/trending-down.svg";
+        if (matchType != "Friendly") {
+          ratingNumber.textContent = " -" + rating;
+          ratingIcon.src = "images/trending-down.svg";
+        }
+        ratingIcon.style.display = "none";
       } else if (result === "Draw") {
         resultCard.classList.add("draw-result-card");
         resultLabel.classList.add("draw-result");
         ratingResult.classList.add("draw-rating");
-        ratingNumber.textContent = rating;
-        ratingIcon.src = "images/minus.svg";
+
+        if (matchType != "Friendly") {
+          ratingNumber.textContent = rating;
+          ratingIcon.src = "images/minus.svg";
+        }
+        ratingIcon.style.display = "none";
       } else if (result === "Win") {
         resultCard.classList.add("win-result-card");
         resultLabel.classList.add("win-result");
         ratingResult.classList.add("win-rating");
-        ratingNumber.textContent = " +" + rating;
-        ratingIcon.src = "images/trending-up.svg";
+
+        if (matchType != "Friendly") {
+          ratingNumber.textContent = " +" + rating;
+          ratingIcon.src = "images/trending-up.svg";
+        }
+        ratingIcon.style.display = "none";
       }
 
       resultLabel.textContent = result;
@@ -339,3 +350,16 @@ fetch("http://localhost:4280/api/get_user_match_history")
 
     recentMatchesContainer.appendChild(docFrag);
   });
+
+//   SETTINGS PANEL
+
+// SAVE START RATING IN LOCAL STORAGE
+
+const settingsSaveBtn = document.getElementById("settingsSaveBtn");
+const startRatingInput = document.getElementById("startRatingInput");
+
+settingsSaveBtn.addEventListener("click", () => {
+  startRatingValue = startRatingInput.value;
+  localStorage.setItem("start-rating", startRatingValue);
+  window.location.reload();
+});

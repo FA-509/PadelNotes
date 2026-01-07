@@ -182,7 +182,7 @@
   box-shadow: 0 0 3px #e7ecf3;
 }
 
-.winrate-card {
+.winrate-card-positive {
   background-color: white;
   border-radius: 20px;
   padding: 20px;
@@ -196,17 +196,43 @@
   box-shadow: 0 0 3px #d1fae5;
 }
 
+.winrate-card-negative {
+  background-color: white;
+  border-radius: 20px;
+  padding: 20px;
+  height: 200px;
+  border: solid;
+  border-color: #fff3f3;
+  color: slategrey;
+  font-weight: 400;
+  font-size: 12px;
+  border-width: 2px;
+  box-shadow: 0 0 3px #fff3f3;
+}
+
 .winrate-card:hover {
   box-shadow: 0 0 10px #d1fae5;
 }
 
-.winrate-icon-box {
+.winrate-icon-box-win {
   width: 48px;
   height: 48px;
   border-color: #698bf0;
   border-radius: 15px;
   border-width: 1px;
   background-color: #d1fae5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.winrate-icon-box-loss {
+  width: 48px;
+  height: 48px;
+  border-color: #698bf0;
+  border-radius: 15px;
+  border-width: 1px;
+  background-color: #fff3f3;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -49,7 +49,8 @@
         
         <div class="d-flex gap-2">
         <div class="settings-icon">
-        <img src="images/settings icon.svg" width="21" height="21" alt="" class="d-inline-block me-2" id="settings-icon"></img>
+          
+        <button class="navbar-icon" data-bs-toggle="modal" data-bs-target="#settingsModal"><img src="images/settings icon.svg" width="21" height="21" alt="" class="d-inline-block me-2" id="settings-icon"></img></button>
         </div>
         <div class="user-icon">
         <img src="images/user.svg" width="21" height="21" alt="" id="user-icon"></img>
@@ -157,7 +158,7 @@
         <img src="images/medal.svg" width="14px" height="14px" alt="">
         <span class="form-heading">MATCH TYPE</span>
                         </div>
-        <select id="matchTypeInput" class="importgame-input" name="MatchType" type="text">
+        <select id="matchTypeInput" class="importgame-input" name="matchType" type="text">
                   <option value="Friendly">Friendly</option>
           <option value="Competitive">Competitive</option>
         </select>
@@ -290,22 +291,23 @@
     </div>
     <div>
     <p class="card-text">CURRENT RATING</p>
-    <p class="rating-number">2.45</p>
-    <p class="rating-stat"><img src="images/award.svg" width="15" height="15" alt=""> Intermediate</p>
+    <p class="rating-number"></p>
+    <p class="rating-stat"><img src="images/award.svg" width="15" 
+      height="15" alt=""> <span id="ratingExperience"></span></p>
     </div>
   </div>
   </div>
 </div>
       <div class="col-3">
-     <div class="winrate-card">
+     <div class="winrate-card-positive">
   <div class="card-body">
-    <div class="winrate-icon-box">
-    <img src="images/trending-up.svg" width="21" height="21" alt="" id="trending-up-icon"></img>
+    <div class="winrate-icon-box-win">
+    <img id="winrateCardTrendIcon" src="images/trending-up.svg" width="21" height="21" alt="" id="trending-up-icon"></img>
     </div>
     <div>
     <p class="card-text">WIN RATE</p>
-    <p class="winrate-number">62.5%</p>
-    <p class="winrate-stat"><img src="images/trending-up.svg" width="15" height="15" alt=""> +5% this month</p>
+    <p class="winrate-number"></p>
+    <p class="winrate-stat"><img id="winrateCardMiniTrendIcon" src="images/trending-up.svg" width="15" height="15" alt=""><span id="winRateThisMonthStat"></span></p>
     </div>
   </div>
   </div>
@@ -319,7 +321,7 @@
     </div>
     <div>
     <p class="card-text">TOTAL MATCHES</p>
-    <p class="total-matches-number">24</p>
+    <p class="total-matches-number"></p>
     <p class="total-matches-stat"> All Time</p>
     </div>
   </div>
@@ -335,7 +337,7 @@
     <div>
     <p class="card-text">WIN STREAK</p>
     <p class="winstreak-number">3 Games</p>
-    <p class="winstreak-stat"> Keep it going!</p>
+    <p class="winstreak-stat"></p>
     </div>
   </div>
   </div>
@@ -387,11 +389,11 @@
      </div>
           <h2>Rating Progress</h2>
     </div>
-    <p class="chart-stat"><img src="images/trending-up.svg" width="15" height="15" alt=""> +22.5%</p>
+    <p class="chart-stat"><img src="images/trending-up.svg" width="15" height="15" alt=""><span id="chartIconStatNumber"></span></p>
     </div>
     <div class="chart-text">
-    <p id="chart-text-heading">2.45</p>
-    <p id="chart-text-subheading">+0.45 POINTS FROM LAST 12 MATCHES</p>
+    <p id="chartTextHeading"></p>
+    <p id="chart-text-subheading"></p>
     </div>
     <div class="chart-container">
     <canvas id="line-chart"></canvas>
@@ -438,19 +440,41 @@
     </div>
     <div class="players-names">
       <img src="images/users.svg" width="17" height="17" alt="">
-      <p id="opponentsNames"></p>
+      <p class="opponentsNames"></p>
     </div>
     <hr class="solid">
     <div class="score-rating-container">
       <p class="card-score"></p>
       <div class="win-rating">
-        <p class="card-rating"><img class="rating-icon" src="images/trending-up.svg" width="17" height="17" alt=""><span id="ratingNumber"></span></p>
+        <p class="card-rating"><img class="rating-icon" src="images/trending-up.svg" width="17" height="17" alt=""><span class="ratingNumber"></span></p>
       </div>
     </div>
     </div>
 </template>
 </div>
 </div>
+</div>
+
+<!-- SETTINGS PANEL -->
+
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="settings-modal-title">Settings</h1>
+      </div>
+      <div class="modal-body">
+              <div>
+                                <span class="settings-subtitle">Start Rating</span>
+                <input class="settings-startrating-input w-100" id="startRatingInput" type="number" placeholder="0" />
+                </div>
+      </div>
+      <div class="modal-footer d-flex">
+        <button type="button" id="settingsSaveBtn" class="btn btn-primary w-100">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -461,7 +485,7 @@
     referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="js/live-demo-chart.js"></script>
+    <script src="js/chart.js"></script>
      <script src="js/live-demo-script.js"></script>
      <script src="js/script.js"></script>
   </body>
