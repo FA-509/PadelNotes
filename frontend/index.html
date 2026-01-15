@@ -72,8 +72,224 @@
     </div>
     </div>
 
-<!-- Import a Game Form -->
-<div class="modal fade" id="importGameForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+<!-- EDIT GAME FORM-->
+<div class="modal fade" id="editGameForm" tabindex="-1" aria-labelledby="editGameModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="import-game-title-section">
+          <div class="import-game-left">
+            <img src="images/blue-trophy.svg" width="50px" height="50px" alt="" id="log-new-match-icon">
+        <div>
+        <h1 class="modal-title fs-5" id="modal-title">Edit Current Match</h1>
+        <p id="modal-sub-title">Edit match details and score to update your progress</p>
+        </div>
+        </div>
+         <p id="new-entry-pill">Editing</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p class="sub-titles">MATCH DETAILS</p>
+
+     
+
+
+        <form id="editgame-form">
+                <div class="row-4">
+
+        <div class="input-container">
+                        <div class="date-title">
+        <img src="images/calendar-grey.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">DATE</span>
+        </div>
+        <input id="editDateInput" class="editgame-input" name="date" type="date">
+        </div>
+
+
+
+<div class="input-container">
+                                <div class="time-title">
+        <img src="images/clock.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">TIME</span>
+        </div>
+        <input id="editTimeInput" class="editgame-input" name="time" type="time">
+        </div>
+
+
+
+
+
+
+        <div class="input-container">
+                                        <div class="duration-title">
+        <img src="images/clock.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">DURATION</span>
+        </div>
+        <select id="editDurationInput" name="duration" class="editgame-input" name="time" type="time">
+          <option value="60">60m</option>
+          <option value="90">90m</option>
+          <option value="120">120m</option>
+        </select>
+        </div>
+
+
+        <div class="input-container">
+                        <div class="location-title">
+        <img src="images/map-pin.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">LOCATION</span>
+        </div>
+        <input id="editLocationInput" class="editgame-input" name="location" type="text" placeholder="London">
+        </div>
+        </div>
+
+          <div class="row-5">
+<div class="input-container">
+        <div class="my-team-title">
+        <img src="images/grey-users.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">MY TEAM</span>
+        </div>
+        <input id="editMyTeamInput" class="editgame-input" name="myTeam" type="text" placeholder="Smith & Jones">
+        </div>
+
+
+<div class="input-container">
+                <div class="opponents-title">
+        <img src="images/shield.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">OPPONENTS</span>
+        </div>
+        <input id="editMyOpponentsInput" class="editgame-input" name="myOpponents" type="text" placeholder="Jack & Lee">
+        </div>
+
+        <div class="input-container">
+                        <div class="matchtype-title">
+        <img src="images/medal.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">MATCH TYPE</span>
+                        </div>
+        <select id="editMatchTypeInput" class="editgame-input" name="matchType" type="text">
+                  <option value="Friendly">Friendly</option>
+          <option value="Competitive">Competitive</option>
+        </select>
+        </div>
+
+        <div class="input-container">
+                <div class="rating-title">
+        <img src="images/trending-up-down.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">RATING</span>
+        </div>
+        <input id="editInputRating" class="editgame-input" name="rating" type="text" placeholder="0.04">
+        </div>
+
+                <div class="input-container">
+                                        <div class="result-title">
+        <img src="images/circle-star.svg" width="14px" height="14px" alt="">
+        <span class="form-heading">RESULT</span>
+        </div>
+        <select name="result" id="editResultId" class="editgame-input" name="time" type="time">
+          <option value="Win">Win</option>
+          <option value="Loss">Loss</option>
+          <option value="Draw">Draw</option>
+        </select>
+        </div>
+
+        </div>
+              <p id="set-scores-title" class="sub-titles">SET SCORES</p>
+
+              <div class="set-scores-card">
+                <div class="row-4-scoreboard">
+                  <div class="input-container-subtitle">
+                <span>PAIR</span>
+                <input id="editPairInput" type="text" readonly class="name-readonly">
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores">SET 1</span>
+                <input name="myTeamSet1" id="editMyTeamSet1" class="editgame-input-scores" type="number" />
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores">SET 2</span>
+                <input name="myTeamSet2" id="editMyTeamSet2" class="editgame-input-scores" type="number" />
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores">SET 3</span>
+                <input name="myTeamSet3" id="editMyTeamSet3" class="editgame-input-scores" type="number" />
+                </div>
+                </div>
+
+                                <div class="row-4-scoreboard">
+                  <div class="input-container-subtitle">
+                <span id="pair-subtitle">PAIR</span>
+                <input id="editPairInput2" type="text" readonly class="name-readonly">
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores-hidden">SET 1</span>
+                <input name="myOpponentsSet1" id="editMyOpponentsSet1" class="editgame-input-scores" type="number"  />
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores-hidden">SET 2</span>
+                <input name="myOpponentsSet2" id="editMyOpponentsSet2" class="editgame-input-scores" type="number"  />
+                </div>
+
+                <div class="input-container-scoreboard">
+                                <span class="form-heading-scores-hidden">SET 3</span>
+                <input name="myOpponentsSet3" id="editMyOpponentsSet3" class="editgame-input-scores" type="number" />
+                </div>
+                </div>
+              </div>
+
+              
+
+
+ <p class="sub-titles">MATCH SUMMARY</p>
+
+     <div id="editResultCard" class="edit-win-result-card">
+    <div class="date-result-container">
+    <div class="game-date">
+      <img src="images/calendar.svg" width="17" height="17" alt="">
+      <p id="editPreviewCardDate"></p>
+    </div>
+    <p id="editResultPill" class="win-result">Win</p>
+    </div>
+    <div class="players-names">
+      <img src="images/users.svg" width="17" height="17" alt="">
+      <p id="editOpponentsNames"></p>
+    </div>
+    <hr class="solid">
+    <div class="score-rating-container">
+      <p id="editPreviewCardScore"></p>
+      <div id="editPreviewCardRatingContainer" class="win-rating">
+        <p><img id="editPreviewCardRatingIcon" src="images/trending-up.svg" width="17" height="17" alt=""> <span id="editPreviewCardRating"></span></p>
+      </div>
+    </div>
+    </div>
+
+
+    <p class="sub-titles">HOW DID THE MATCH GO?</p>
+
+    <textarea class="feedback-input-text" name="userFeedback" id="editUserFeedback" placeholder="Add details on what went well and what didn’t. This helps the AI generate targeted challenges to improve your game."></textarea>
+
+
+
+  </div>
+
+      <div class="modal-footer">
+        <button type="button" id="importFormCancelBtn" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button id="logMatchBtn" type="submit" class="btn btn-primary">Log Match</button>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- IMPORT GAME FORM-->
+<div class="modal fade" id="importGameForm" tabindex="-1" aria-labelledby="importGameModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -187,7 +403,6 @@
 
 
 
-
         </div>
 
 
@@ -242,7 +457,7 @@
 
  <p class="sub-titles">MATCH SUMMARY</p>
 
-     <div id="result-card" class="win-result-card">
+     <div id="result-card" class="import-win-result-card">
     <div class="date-result-container">
     <div class="game-date">
       <img src="images/calendar.svg" width="17" height="17" alt="">
@@ -252,7 +467,7 @@
     </div>
     <div class="players-names">
       <img src="images/users.svg" width="17" height="17" alt="">
-      <p id="opponentsNames"></p>
+      <p id="importOpponentsNames"></p>
     </div>
     <hr class="solid">
     <div class="score-rating-container">
@@ -264,6 +479,9 @@
     </div>
     </div>
 
+    <p class="sub-titles">HOW DID THE MATCH GO?</p>
+
+    <textarea class="feedback-input-text" name="userFeedback" id="userFeedback" placeholder="Add details on what went well and what didn’t. This helps the AI generate targeted challenges to improve your game."></textarea>
 
       </div>
 
@@ -399,9 +617,7 @@
     <canvas id="line-chart"></canvas>
     </div>
     
-
     
-
   </div>
   </div>
   
@@ -426,11 +642,9 @@
     </div>
 
 
-    <div id="recentMatchesContainer"></div>
-
-
+    <div id="recentMatchesContainer" data-bs-toggle="modal" data-bs-target="#editGameForm">
 <template id="matchCardTemplate">
-    <div class="win-result-card">
+    <div class="win-result-card" data-match-id="">
     <div class="date-result-container">
     <div class="game-date">
       <img src="images/calendar.svg" width="17" height="17" alt="">
@@ -451,6 +665,7 @@
     </div>
     </div>
 </template>
+</div>
 </div>
 </div>
 </div>
@@ -478,15 +693,11 @@
 </div>
 
 
-
-
-   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" integrity="sha512-Y51n9mtKTVBh3Jbx5pZSJNDDMyY+yGe77DGtBPzRlgsf/YLCh13kSZ3JmfHGzYFCmOndraf0sQgfM654b7dJ3w==" crossorigin="anonymous" 
     referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="js/chart.js"></script>
-     <script src="js/live-demo-script.js"></script>
      <script src="js/script.js"></script>
   </body>
 </html>

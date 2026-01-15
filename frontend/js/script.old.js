@@ -355,8 +355,9 @@
 //       let match_edit = Object.fromEntries(formData_edit);
 //       document.getElementById("form-container").classList.remove("open");
 
-//       fetch(`http://localhost:4280/api/edit_game?id=${matchId}`, {
-//         method: "POST",
+      fetch(`http://localhost:4280/api/edit_game?id=${matchId}`, {
+        
+        method: "POST",
 //         headers: {
 //           "Content-Type": "application/json",
 //         },

@@ -89,6 +89,19 @@
   background-color: white;
 }
 
+.editgame-input {
+  border-radius: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #e5e7eb;
+  padding-top: 8px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 14px;
+  margin-top: 4px;
+  background-color: white;
+}
+
 .input-container {
   display: flex;
   flex-direction: column;
@@ -151,9 +164,22 @@
   border-color: #f4f5f7;
   border-radius: 15px;
   padding: 20px;
+  margin-bottom: 20px;
 }
 
 .importgame-input-scores {
+  border-radius: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #e5e7eb;
+  margin-top: 4px;
+  background-color: white;
+  text-align: center;
+  width: 100%;
+  height: 35px;
+}
+
+.editgame-input-scores {
   border-radius: 8px;
   border-style: solid;
   border-width: 1px;
@@ -216,4 +242,22 @@
 
 #settings-modal-title {
   font-style: bold;
+}
+
+.feedback-input-text {
+  border-radius: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #e5e7eb;
+  margin-top: 4px;
+  background-color: white;
+  text-align: left;
+  width: 100%;
+  min-height: 100px;
+  resize: none;
+  overflow: auto;
+}
+
+.feedback-input-text::placeholder {
+  color: #b3b7be;
 }

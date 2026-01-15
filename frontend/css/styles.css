@@ -489,6 +489,30 @@
   border-color: #cef8e5;
 }
 
+.import-win-result-card {
+  background-color: #edfff7;
+  border-radius: 14px;
+  padding-top: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border: solid;
+  border-width: 1px;
+  border-color: #cef8e5;
+  margin-bottom: 20px;
+}
+
+.edit-win-result-card {
+  background-color: #edfff7;
+  border-radius: 14px;
+  padding-top: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border: solid;
+  border-width: 1px;
+  border-color: #cef8e5;
+  margin-bottom: 20px;
+}
+
 .win-result-card:hover {
   box-shadow: 0 0 2px #cef8e5;
   cursor: pointer;
