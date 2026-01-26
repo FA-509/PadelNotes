@@ -656,7 +656,6 @@
 }
 
 .progress-bar {
-  width: 33%;
   background-color: #ffffff;
 }
 
@@ -885,6 +884,16 @@ input[type="number"] {
 
 body {
   background-color: #fafcff;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
 }

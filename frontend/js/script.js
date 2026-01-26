@@ -27,6 +27,26 @@ function dateFormatter(rawDate) {
   return monthName + " " + intDay + ", " + intYear;
 }
 
+// MATCH PROGRESS COUNTER FUNCTION
+
+function matchProgressIncrease() {
+  let count = localStorage.getItem("progressCount");
+  newCount = Number(count) + 1;
+  localStorage.setItem("progressCount", newCount);
+  let progressBarStat = document.querySelector(".progress-bar");
+
+  if (newCount == 1) {
+    localStorage.setItem("progressBar", "33%");
+    progressBarStat.style.width = localStorage.getItem("progressBar");
+  } else if (newCount == 2) {
+    localStorage.setItem("progressBar", "66%");
+    progressBarStat.style.width = localStorage.getItem("progressBar");
+  } else if (newCount == 3) {
+    localStorage.setItem("progressBar", "100%");
+    progressBarStat.style.width = localStorage.getItem("progressBar");
+  }
+}
+
 // IMPORT GAME FORM
 
 //POPULATE NAMES IN SCOREBOARD AND PREVIEW CARD
@@ -85,7 +105,7 @@ scoreInputs = [
 scoreInputs.forEach((input) =>
   input.addEventListener("input", () => {
     createScoreSetPreview();
-  })
+  }),
 );
 
 function createScoreSetPreview() {
@@ -117,7 +137,7 @@ const inputRating = document.querySelector("#inputRating");
 const previewCardRating = document.querySelector("#previewCardRating");
 const previewCardRatingIcon = document.querySelector("#previewCardRatingIcon");
 const previewCardRatingContainer = document.querySelector(
-  "#previewCardRatingContainer"
+  "#previewCardRatingContainer",
 );
 
 inputRating.addEventListener("input", () => {
@@ -230,6 +250,7 @@ importGameForm.addEventListener("submit", (event) => {
     body: JSON.stringify(data),
   }).then(function () {
     document.getElementById("importgame-form").reset();
+    matchProgressIncrease();
     window.location.reload();
   });
 });
@@ -246,17 +267,90 @@ fetch("http://localhost:4280/api/get_user_match_history")
   })
   .then(function (responseData) {
     const matchesSortedByDateDesc = responseData.sort(
-      (a, b) => new Date(b.date) - new Date(a.date)
+      (a, b) => new Date(b.date) - new Date(a.date),
     );
     //   GRAB LATEST 5 MATCHES
     const lastFiveMatchesArray = matchesSortedByDateDesc.slice(0, 5);
+
+    // GRAB FEEDBACK FROM THE LAST 5 MATCHES
+
+    feedbackArray = [];
+
+    for (let match of lastFiveMatchesArray) {
+      const userFeedback = match.userFeedback;
+      feedbackArray.push(userFeedback);
+    }
+
+    // UPDATE AI CARD RENDER FUNCTION
+
+    function updateAICard(parsedJSON) {
+      const primaryWeaknessText = parsedJSON["primaryWeakness"];
+      const whyItMattersText = parsedJSON["whyItMatters"];
+      const challengeText = parsedJSON["challenge"];
+
+      document.getElementById("sub-heading").innerText = primaryWeaknessText;
+      document.getElementById("whyitmatters-text").innerText = whyItMattersText;
+      document.getElementById("challenge-text").innerText = challengeText;
+    }
+
+    // CHECK AI CARD MATCH PROGRESS
+
+    const progressCounterStat = document.querySelector("#matches-progress");
+
+    progressCounterStat.innerText =
+      localStorage.getItem("progressCount") + "/3 Matches";
+
+    const progressBarStat = document.querySelector(".progress-bar");
+    progressBarStat.style.width = localStorage.getItem("progressBar");
+
+    // GENERATE CHALLENGE
+
+    const regenerateChallengeBtn = document.querySelector(
+      ".regenerate-challenge-btn",
+    );
+
+    regenerateChallengeBtn.addEventListener("click", (event) => {
+      fetch(`http://localhost:4280/api/generate_challenge`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: feedbackArray.join("\n") }),
+      })
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (response) {
+          // // STORE CHALLENGE INTO LOCAL STORAGE AND UPDATE AI CARD
+          localStorage.setItem("challenge", JSON.stringify(response));
+          updateAICard(response);
+
+          // RESET MATCH PROGRESS TO ZERO
+
+          let count = 0;
+          localStorage.setItem("progressCount", count);
+          localStorage.setItem("progressBar", "0%");
+
+          progressBarStat.style.width = "0%";
+          progressCounterStat.innerText =
+            localStorage.getItem("progressCount") + "/3 Matches";
+        });
+    });
+
+    // RETRIEVE GENERATED CHALLENGE ON PAGE LOAD
+
+    const generated_challenge = localStorage.getItem("challenge");
+    const parsedJSON = JSON.parse(generated_challenge);
+    if (parsedJSON != null) {
+      updateAICard(parsedJSON);
+    }
 
     // RENDER LAST 5 MATCHES TO RECENT GAMES
 
     const matchCardTemplate = document.getElementById("matchCardTemplate");
     const docFrag = document.createDocumentFragment();
     const recentMatchesContainer = document.getElementById(
-      "recentMatchesContainer"
+      "recentMatchesContainer",
     );
 
     for (let match of lastFiveMatchesArray) {
@@ -283,6 +377,7 @@ fetch("http://localhost:4280/api/get_user_match_history")
       const myTeamSet2Score = match.myTeamSet2;
       const myTeamSet3Score = match.myTeamSet3;
       const matchId = match.id;
+      const matchFeedback = match.userFeedback;
 
       const myOpponentsSet1Score = match.myOpponentsSet1;
       const myOpponentsSet2Score = match.myOpponentsSet2;
@@ -352,331 +447,318 @@ fetch("http://localhost:4280/api/get_user_match_history")
     }
 
     recentMatchesContainer.appendChild(docFrag);
-  });
 
-// DETECT CLICKS ON RECENT MATCHES
+    // DETECT CLICKS ON RECENT MATCHES
 
-const editDateInput = document.querySelector("#editDateInput");
-const editTimeInput = document.querySelector("#editTimeInput");
-const editDurationInput = document.querySelector("#editDurationInput");
-const editLocationInput = document.querySelector("#editLocationInput");
-const editMyTeamInput = document.querySelector("#editMyTeamInput");
-const editMyOpponents = document.querySelector("#editMyOpponentsInput");
-const editRating = document.querySelector("#editInputRating");
-const editMatchType = document.querySelector("#editMatchTypeInput");
-const editResult = document.querySelector("#editResultId");
-const editResultPill = document.querySelector("#editResultPill");
-const editResultCard = document.querySelector("#editResultCard");
-const editPreviewCardRatingContainer = document.querySelector(
-  "#editPreviewCardRatingContainer"
-);
-const editPreviewCardRatingIcon = document.querySelector(
-  "#editPreviewCardRatingIcon"
-);
-const editPreviewCardRating = document.querySelector("#editPreviewCardRating");
-const editUserfeedbackInput = document.querySelector("#editUserFeedback");
+    const editDateInput = document.querySelector("#editDateInput");
+    const editTimeInput = document.querySelector("#editTimeInput");
+    const editDurationInput = document.querySelector("#editDurationInput");
+    const editLocationInput = document.querySelector("#editLocationInput");
+    const editMyTeamInput = document.querySelector("#editMyTeamInput");
+    const editMyOpponents = document.querySelector("#editMyOpponentsInput");
+    const editRating = document.querySelector("#editInputRating");
+    const editMatchType = document.querySelector("#editMatchTypeInput");
+    const editResult = document.querySelector("#editResultId");
+    const editResultPill = document.querySelector("#editResultPill");
+    const editResultCard = document.querySelector("#editResultCard");
+    const editPreviewCardRatingContainer = document.querySelector(
+      "#editPreviewCardRatingContainer",
+    );
+    const editPreviewCardRatingIcon = document.querySelector(
+      "#editPreviewCardRatingIcon",
+    );
+    const editPreviewCardRating = document.querySelector(
+      "#editPreviewCardRating",
+    );
+    const editUserfeedbackInput = document.querySelector("#editUserFeedback");
 
-const editmyTeamSet1 = document.querySelector("#editMyTeamSet1");
-const editmyTeamSet2 = document.querySelector("#editMyTeamSet2");
-const editmyTeamSet3 = document.querySelector("#editMyTeamSet3");
+    const editmyTeamSet1 = document.querySelector("#editMyTeamSet1");
+    const editmyTeamSet2 = document.querySelector("#editMyTeamSet2");
+    const editmyTeamSet3 = document.querySelector("#editMyTeamSet3");
 
-const editMyOpponentsSet1 = document.querySelector("#editMyOpponentsSet1");
-const editMyOpponentsSet2 = document.querySelector("#editMyOpponentsSet2");
-const editMyOpponentsSet3 = document.querySelector("#editMyOpponentsSet3");
+    const editMyOpponentsSet1 = document.querySelector("#editMyOpponentsSet1");
+    const editMyOpponentsSet2 = document.querySelector("#editMyOpponentsSet2");
+    const editMyOpponentsSet3 = document.querySelector("#editMyOpponentsSet3");
 
-const matchCard = document.querySelector(".recent-matches-card");
+    const matchCard = document.querySelector(".recent-matches-card");
 
-// CHECK IF MATCHTYPE INPUT HAS CHANGED
+    // CHECK IF MATCHTYPE INPUT HAS CHANGED
 
-editMatchType.addEventListener("change", () => {
-  checkIfFriendlyInEditForm();
-});
-
-// CHECK IF RATING INPUT IS MISSING FUNCTION IN EDIT FORM
-
-function checkIfRatingInputMissingInEditForm() {
-  if (editRating.value.trim() === "") {
-    editPreviewCardRating.style.display = "none";
-    editPreviewCardRatingIcon.style.display = "none";
-  }
-}
-
-// CHECK IF FRIENDLY MATCH TYPE IN EDIT FORM
-function checkIfFriendlyInEditForm() {
-  if (editMatchType.value === "Friendly") {
-    editPreviewCardRating.style.display = "none";
-    editPreviewCardRatingIcon.style.display = "none";
-  } else if (editMatchType.value === "Competitive") {
-    editPreviewCardRating.style.display = "inline";
-    editPreviewCardRatingIcon.style.display = "inline";
-  }
-}
-
-matchCard.addEventListener("click", (event) => {
-  let closestRow = event.target.closest(
-    ".win-result-card, .draw-result-card, .loss-result-card"
-  );
-  let matchId = closestRow.dataset.matchId;
-  fetch(`http://localhost:4280/api/find_game_via_id?id=${matchId}`)
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (responseData) {
-      const matchDate = responseData.date;
-      const matchTime = responseData.time;
-      const matchDuration = responseData.duration;
-      const matchLocation = responseData.location;
-      const matchMyTeam = responseData.myTeam;
-      const matchMyOpponents = responseData.myOpponents;
-      const matchRating = responseData.rating;
-      const matchType = responseData.matchType;
-      const matchResult = responseData.result;
-      const matchMyTeamSet1 = responseData.myTeamSet1;
-      const matchMyTeamSet2 = responseData.myTeamSet2;
-      const matchMyTeamSet3 = responseData.myTeamSet3;
-      const matchMyOpponentsSet1 = responseData.myOpponentsSet1;
-      const matchMyOpponentsSet2 = responseData.myOpponentsSet2;
-      const matchMyOpponentsSet3 = responseData.myOpponentsSet3;
-      const matchUserFeedback = responseData.userFeedback;
-
-      editDateInput.value = matchDate;
-      editTimeInput.value = matchTime;
-      editDurationInput.value = matchDuration;
-      editLocationInput.value = matchLocation;
-      editMyTeamInput.value = matchMyTeam;
-      editMyOpponents.value = matchMyOpponents;
-      editRating.value = matchRating;
-      editMatchType.value = matchType;
-      editResult.value = matchResult;
-      editmyTeamSet1.value = matchMyTeamSet1;
-      editmyTeamSet2.value = matchMyTeamSet2;
-      editmyTeamSet3.value = matchMyTeamSet3;
-      editMyOpponentsSet1.value = matchMyOpponentsSet1;
-      editMyOpponentsSet2.value = matchMyOpponentsSet2;
-      editMyOpponentsSet3.value = matchMyOpponentsSet3;
-      editUserfeedbackInput.value = matchUserFeedback;
-
-      // FORMAT PREVIEW CARD FUNCTION
-
-      function formatPreviewCard() {
-        editResultCard.classList.remove("win-result-card");
-        editResultCard.classList.remove("draw-result-card");
-        editResultCard.classList.remove("loss-result-card");
-        editResultPill.classList.remove("win-result");
-        editResultPill.classList.remove("draw-result");
-        editResultPill.classList.remove("loss-result");
-        editPreviewCardRatingContainer.classList.remove("win-rating");
-        editPreviewCardRatingContainer.classList.remove("loss-rating");
-        editPreviewCardRatingContainer.classList.remove("draw-rating");
-
-        if (editResult.value === "Loss") {
-          editResultCard.classList.add("loss-result-card");
-          editResultPill.classList.add("loss-result");
-          editResultPill.textContent = "Loss";
-          editPreviewCardRatingIcon.src = "images/trending-down.svg";
-          editPreviewCardRating.textContent = "-" + editRating.value;
-          editPreviewCardRatingContainer.classList.add("loss-rating");
-          editPreviewCardRatingIcon.style.display = "inline";
-          checkIfFriendlyInEditForm();
-          checkIfRatingInputMissingInEditForm();
-        } else if (editResult.value === "Draw") {
-          editResultCard.classList.add("draw-result-card");
-          editResultPill.classList.add("draw-result");
-          editResultPill.textContent = "Draw";
-          editPreviewCardRatingIcon.src = "images/minus.svg";
-          editPreviewCardRating.textContent = "" + editRating.value;
-          editPreviewCardRatingContainer.classList.add("draw-rating");
-          editPreviewCardRatingIcon.style.display = "inline";
-          checkIfFriendlyInEditForm();
-          checkIfRatingInputMissingInEditForm();
-        } else if (editResult.value === "Win") {
-          editResultCard.classList.add("win-result-card");
-          editResultPill.classList.add("win-result");
-          editResultPill.textContent = "Win";
-          editPreviewCardRating.textContent = "+" + editRating.value;
-          editPreviewCardRatingIcon.src = "images/trending-up.svg";
-          editPreviewCardRatingContainer.classList.add("win-rating");
-          editPreviewCardRatingIcon.style.display = "inline";
-          checkIfFriendlyInEditForm();
-          checkIfRatingInputMissingInEditForm();
-        }
-      }
-
-      // FORMAT PREVIEW CARD BY RESULT
-      formatPreviewCard();
-
-      // CHECK IF INPUT RATING HAS BEEN FILLED AND POPULATE RATING PREVIEW
-      editPreviewCardRating.textContent = matchRating;
-      editRating.addEventListener("input", () => {
-        formatPreviewCard();
-      });
-
-      // EDIT FORM RESULT CHANGE
-
-      editResult.addEventListener("change", () => {
-        formatPreviewCard();
-      });
-
-      //POPULATE NAMES IN SCOREBOARD AND PREVIEW CARD IN EDIT FORM
-      const myTeamInput = document.querySelector("#editMyTeamInput");
-      const myOpponentsInput = document.querySelector("#editMyOpponentsInput");
-      const editOpponentsNames = document.querySelector("#editOpponentsNames");
-
-      const pairInput = document.querySelector("#editPairInput");
-      const pairInput2 = document.querySelector("#editPairInput2");
-      pairInput.value = myTeamInput.value;
-      pairInput2.value = myOpponentsInput.value;
-      editOpponentsNames.textContent = "vs " + pairInput2.value;
-
-      myTeamInput.addEventListener("input", () => {
-        pairInput.value = myTeamInput.value;
-      });
-
-      myOpponentsInput.addEventListener("input", () => {
-        pairInput2.value = myOpponentsInput.value;
-        editOpponentsNames.textContent = "vs " + pairInput2.value;
-      });
-
-      // FILL OUT DATE IN PREVIEW CARD IN EDIT FORM
-      const dateInput = document.querySelector("#editDateInput");
-      const editPreviewCardDate = document.querySelector(
-        "#editPreviewCardDate"
-      );
-      editPreviewCardDate.textContent = dateFormatter(dateInput.value);
-
-      dateInput.addEventListener("change", () => {
-        editPreviewCardDate.textContent = dateFormatter(dateInput.value);
-      });
-
-      // UPDATE PREVIEW SCORE CARD IN EDIT FORM
-
-      const previewCardScore = document.querySelector("#editPreviewCardScore");
-
-      const editMyTeamSet1Preview = document.querySelector("#editMyTeamSet1");
-      const editMyTeamSet2Preview = document.querySelector("#editMyTeamSet2");
-      const editMyTeamSet3Preview = document.querySelector("#editMyTeamSet3");
-
-      const editMyOpponentsSet1Preview = document.querySelector(
-        "#editMyOpponentsSet1"
-      );
-      const editMyOpponentsSet2Preview = document.querySelector(
-        "#editMyOpponentsSet2"
-      );
-      const editMyOpponentsSet3Preview = document.querySelector(
-        "#editMyOpponentsSet3"
-      );
-
-      scoreInputs = [
-        editMyTeamSet1Preview,
-        editMyTeamSet2Preview,
-        editMyTeamSet3Preview,
-        editMyOpponentsSet1Preview,
-        editMyOpponentsSet2Preview,
-        editMyOpponentsSet3Preview,
-      ];
-
-      scoreInputs.forEach((input) =>
-        input.addEventListener("input", () => {
-          createScoreSetEditFormPreview();
-        })
-      );
-
-      function createScoreSetEditFormPreview() {
-        let set1ValueA = editMyTeamSet1Preview.value.trim();
-        let set2ValueA = editMyTeamSet2Preview.value.trim();
-        let set3ValueA = editMyTeamSet3Preview.value.trim();
-        let set1ValueB = editMyOpponentsSet1Preview.value.trim();
-        let set2ValueB = editMyOpponentsSet2Preview.value.trim();
-        let set3ValueB = editMyOpponentsSet3Preview.value.trim();
-        const sets = [];
-        if (set1ValueA !== "" && set1ValueB !== "") {
-          sets.push(set1ValueA + "-" + set1ValueB);
-        }
-
-        if (set2ValueA !== "" && set2ValueB !== "") {
-          sets.push(" " + set2ValueA + "-" + set2ValueB);
-        }
-
-        if (set3ValueA !== "" && set3ValueB !== "") {
-          sets.push(" " + set3ValueA + "-" + set3ValueB);
-        }
-        previewCardScore.textContent = sets;
-      }
-
-      createScoreSetEditFormPreview();
+    editMatchType.addEventListener("change", () => {
+      checkIfFriendlyInEditForm();
     });
 
-  // SUBMIT GAME TO API
+    // CHECK IF RATING INPUT IS MISSING FUNCTION IN EDIT FORM
 
-  const editGameForm = document.getElementById("editgame-form");
+    function checkIfRatingInputMissingInEditForm() {
+      if (editRating.value.trim() === "") {
+        editPreviewCardRating.style.display = "none";
+        editPreviewCardRatingIcon.style.display = "none";
+      }
+    }
 
-  editGameForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const formData = new FormData(editGameForm);
-    const data = Object.fromEntries(formData);
+    // CHECK IF FRIENDLY MATCH TYPE IN EDIT FORM
+    function checkIfFriendlyInEditForm() {
+      if (editMatchType.value === "Friendly") {
+        editPreviewCardRating.style.display = "none";
+        editPreviewCardRatingIcon.style.display = "none";
+      } else if (editMatchType.value === "Competitive") {
+        editPreviewCardRating.style.display = "inline";
+        editPreviewCardRatingIcon.style.display = "inline";
+      }
+    }
 
-    fetch(`http://localhost:4280/api/edit_game?id=${matchId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }).then(function () {
+    let selectedMatchId = null;
+
+    matchCard.addEventListener("click", (event) => {
+      let closestRow = event.target.closest(
+        ".win-result-card, .draw-result-card, .loss-result-card",
+      );
+      selectedMatchId = closestRow.dataset.matchId;
+      fetch(`http://localhost:4280/api/find_game_via_id?id=${selectedMatchId}`)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (responseData) {
+          const matchDate = responseData.date;
+          const matchTime = responseData.time;
+          const matchDuration = responseData.duration;
+          const matchLocation = responseData.location;
+          const matchMyTeam = responseData.myTeam;
+          const matchMyOpponents = responseData.myOpponents;
+          const matchRating = responseData.rating;
+          const matchType = responseData.matchType;
+          const matchResult = responseData.result;
+          const matchMyTeamSet1 = responseData.myTeamSet1;
+          const matchMyTeamSet2 = responseData.myTeamSet2;
+          const matchMyTeamSet3 = responseData.myTeamSet3;
+          const matchMyOpponentsSet1 = responseData.myOpponentsSet1;
+          const matchMyOpponentsSet2 = responseData.myOpponentsSet2;
+          const matchMyOpponentsSet3 = responseData.myOpponentsSet3;
+          const matchUserFeedback = responseData.userFeedback;
+
+          editDateInput.value = matchDate;
+          editTimeInput.value = matchTime;
+          editDurationInput.value = matchDuration;
+          editLocationInput.value = matchLocation;
+          editMyTeamInput.value = matchMyTeam;
+          editMyOpponents.value = matchMyOpponents;
+          editRating.value = matchRating;
+          editMatchType.value = matchType;
+          editResult.value = matchResult;
+          editmyTeamSet1.value = matchMyTeamSet1;
+          editmyTeamSet2.value = matchMyTeamSet2;
+          editmyTeamSet3.value = matchMyTeamSet3;
+          editMyOpponentsSet1.value = matchMyOpponentsSet1;
+          editMyOpponentsSet2.value = matchMyOpponentsSet2;
+          editMyOpponentsSet3.value = matchMyOpponentsSet3;
+          editUserfeedbackInput.value = matchUserFeedback;
+
+          // FORMAT PREVIEW CARD FUNCTION
+
+          function formatPreviewCard() {
+            editResultCard.classList.remove("win-result-card");
+            editResultCard.classList.remove("draw-result-card");
+            editResultCard.classList.remove("loss-result-card");
+            editResultPill.classList.remove("win-result");
+            editResultPill.classList.remove("draw-result");
+            editResultPill.classList.remove("loss-result");
+            editPreviewCardRatingContainer.classList.remove("win-rating");
+            editPreviewCardRatingContainer.classList.remove("loss-rating");
+            editPreviewCardRatingContainer.classList.remove("draw-rating");
+
+            if (editResult.value === "Loss") {
+              editResultCard.classList.add("loss-result-card");
+              editResultPill.classList.add("loss-result");
+              editResultPill.textContent = "Loss";
+              editPreviewCardRatingIcon.src = "images/trending-down.svg";
+              editPreviewCardRating.textContent = "-" + editRating.value;
+              editPreviewCardRatingContainer.classList.add("loss-rating");
+              editPreviewCardRatingIcon.style.display = "inline";
+              checkIfFriendlyInEditForm();
+              checkIfRatingInputMissingInEditForm();
+            } else if (editResult.value === "Draw") {
+              editResultCard.classList.add("draw-result-card");
+              editResultPill.classList.add("draw-result");
+              editResultPill.textContent = "Draw";
+              editPreviewCardRatingIcon.src = "images/minus.svg";
+              editPreviewCardRating.textContent = "" + editRating.value;
+              editPreviewCardRatingContainer.classList.add("draw-rating");
+              editPreviewCardRatingIcon.style.display = "inline";
+              checkIfFriendlyInEditForm();
+              checkIfRatingInputMissingInEditForm();
+            } else if (editResult.value === "Win") {
+              editResultCard.classList.add("win-result-card");
+              editResultPill.classList.add("win-result");
+              editResultPill.textContent = "Win";
+              editPreviewCardRating.textContent = "+" + editRating.value;
+              editPreviewCardRatingIcon.src = "images/trending-up.svg";
+              editPreviewCardRatingContainer.classList.add("win-rating");
+              editPreviewCardRatingIcon.style.display = "inline";
+              checkIfFriendlyInEditForm();
+              checkIfRatingInputMissingInEditForm();
+            }
+          }
+
+          // FORMAT PREVIEW CARD BY RESULT
+          formatPreviewCard();
+
+          // CHECK IF INPUT RATING HAS BEEN FILLED AND POPULATE RATING PREVIEW
+          editPreviewCardRating.textContent = matchRating;
+          editRating.addEventListener("input", () => {
+            formatPreviewCard();
+          });
+
+          // EDIT FORM RESULT CHANGE
+
+          editResult.addEventListener("change", () => {
+            formatPreviewCard();
+          });
+
+          //POPULATE NAMES IN SCOREBOARD AND PREVIEW CARD IN EDIT FORM
+          const myTeamInput = document.querySelector("#editMyTeamInput");
+          const myOpponentsInput = document.querySelector(
+            "#editMyOpponentsInput",
+          );
+          const editOpponentsNames = document.querySelector(
+            "#editOpponentsNames",
+          );
+
+          const pairInput = document.querySelector("#editPairInput");
+          const pairInput2 = document.querySelector("#editPairInput2");
+          pairInput.value = myTeamInput.value;
+          pairInput2.value = myOpponentsInput.value;
+          editOpponentsNames.textContent = "vs " + pairInput2.value;
+
+          myTeamInput.addEventListener("input", () => {
+            pairInput.value = myTeamInput.value;
+          });
+
+          myOpponentsInput.addEventListener("input", () => {
+            pairInput2.value = myOpponentsInput.value;
+            editOpponentsNames.textContent = "vs " + pairInput2.value;
+          });
+
+          // FILL OUT DATE IN PREVIEW CARD IN EDIT FORM
+          const dateInput = document.querySelector("#editDateInput");
+          const editPreviewCardDate = document.querySelector(
+            "#editPreviewCardDate",
+          );
+          editPreviewCardDate.textContent = dateFormatter(dateInput.value);
+
+          dateInput.addEventListener("change", () => {
+            editPreviewCardDate.textContent = dateFormatter(dateInput.value);
+          });
+
+          // UPDATE PREVIEW SCORE CARD IN EDIT FORM
+
+          const previewCardScore = document.querySelector(
+            "#editPreviewCardScore",
+          );
+
+          const editMyTeamSet1Preview =
+            document.querySelector("#editMyTeamSet1");
+          const editMyTeamSet2Preview =
+            document.querySelector("#editMyTeamSet2");
+          const editMyTeamSet3Preview =
+            document.querySelector("#editMyTeamSet3");
+
+          const editMyOpponentsSet1Preview = document.querySelector(
+            "#editMyOpponentsSet1",
+          );
+          const editMyOpponentsSet2Preview = document.querySelector(
+            "#editMyOpponentsSet2",
+          );
+          const editMyOpponentsSet3Preview = document.querySelector(
+            "#editMyOpponentsSet3",
+          );
+
+          scoreInputs = [
+            editMyTeamSet1Preview,
+            editMyTeamSet2Preview,
+            editMyTeamSet3Preview,
+            editMyOpponentsSet1Preview,
+            editMyOpponentsSet2Preview,
+            editMyOpponentsSet3Preview,
+          ];
+
+          scoreInputs.forEach((input) =>
+            input.addEventListener("input", () => {
+              createScoreSetEditFormPreview();
+            }),
+          );
+
+          function createScoreSetEditFormPreview() {
+            let set1ValueA = editMyTeamSet1Preview.value.trim();
+            let set2ValueA = editMyTeamSet2Preview.value.trim();
+            let set3ValueA = editMyTeamSet3Preview.value.trim();
+            let set1ValueB = editMyOpponentsSet1Preview.value.trim();
+            let set2ValueB = editMyOpponentsSet2Preview.value.trim();
+            let set3ValueB = editMyOpponentsSet3Preview.value.trim();
+            const sets = [];
+            if (set1ValueA !== "" && set1ValueB !== "") {
+              sets.push(set1ValueA + "-" + set1ValueB);
+            }
+
+            if (set2ValueA !== "" && set2ValueB !== "") {
+              sets.push(" " + set2ValueA + "-" + set2ValueB);
+            }
+
+            if (set3ValueA !== "" && set3ValueB !== "") {
+              sets.push(" " + set3ValueA + "-" + set3ValueB);
+            }
+            previewCardScore.textContent = sets;
+          }
+
+          createScoreSetEditFormPreview();
+        });
+
+      // DELETE GAME TO API
+
+      const delMatchBtn = document.querySelector("#delMatchBtn");
+
+      delMatchBtn.addEventListener("click", () => {
+        fetch(
+          `http://localhost:4280/api/delete_game?id=${selectedMatchId}`,
+          {},
+        ).then(function () {
+          window.location.reload();
+        });
+      });
+    });
+
+    // SUBMIT GAME TO API
+
+    const editGameForm = document.getElementById("editgame-form");
+
+    editGameForm.addEventListener("submit", (event) => {
+      console.countReset("edit form submit handler fired");
+
+      event.preventDefault();
+      const formData = new FormData(editGameForm);
+      const data = Object.fromEntries(formData);
+
+      fetch(`http://localhost:4280/api/edit_game?id=${selectedMatchId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }).then(function () {
+        window.location.reload();
+      });
+    });
+
+    //   SETTINGS PANEL
+
+    // SAVE START RATING IN LOCAL STORAGE
+
+    const settingsSaveBtn = document.getElementById("settingsSaveBtn");
+    const startRatingInput = document.getElementById("startRatingInput");
+
+    settingsSaveBtn.addEventListener("click", () => {
+      startRatingValue = startRatingInput.value;
+      localStorage.setItem("start-rating", startRatingValue);
       window.location.reload();
     });
   });
-
-  // GENERATE CHALLENGE
-
-  // const feedbackJson = {
-  //   content: matchUserFeedback,
-  // };
-
-  // regenerateChallengeBtn = document.getElementById("regenerate-challenge-btn");
-
-  // regenerateChallengeBtn.addEventListener("click", (event) => {
-  //   fetch(`http://localhost:4280/api/generate_challenge`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(badFeedbackJson),
-  //   })
-  //     .then(function (response) {
-  //       return response.json();
-  //     })
-  //     .then(function (response) {
-  //       localStorage.setItem("challenge", JSON.stringify(response));
-  //       window.location.reload();
-  //     });
-  // });
-
-  //     console.log(badFeedbackJson);
-
-  //     // STORE CHALLENGE INTO LOCAL STORAGE
-
-  //     const generated_challenge = localStorage.getItem("challenge");
-  //     parsedJSON = JSON.parse(generated_challenge);
-  //     if (parsedJSON != null) {
-  //       primaryWeaknessText = parsedJSON["primaryWeakness"];
-  //       whyItMattersText = parsedJSON["whyItMatters"];
-  //       challengeText = parsedJSON["challenge"];
-  //       document.getElementById("primary-weakness").innerText =
-  //         primaryWeaknessText;
-  //       document.getElementById("why-it-matters").innerText = whyItMattersText;
-  //       document.getElementById("your-challenge").innerText = challengeText;
-  //     }
-});
-
-//   SETTINGS PANEL
-
-// SAVE START RATING IN LOCAL STORAGE
-
-const settingsSaveBtn = document.getElementById("settingsSaveBtn");
-const startRatingInput = document.getElementById("startRatingInput");
-
-settingsSaveBtn.addEventListener("click", () => {
-  startRatingValue = startRatingInput.value;
-  localStorage.setItem("start-rating", startRatingValue);
-  window.location.reload();
-});
