@@ -6,17 +6,20 @@ fetch("http://localhost:4280/api/get_user_match_history")
     // GRAB NUMBER TOTAL NUMBER OF MATCHES
 
     const matchNumber = [];
-    const N = responseData.length + 1;
+    const N = responseData.length;
     for (let i = 1; i <= N; i++) {
       matchNumber.push(i);
     }
+
+    // ADD START POINT TO MATCH NUMBER ARRAY
+    matchNumber.unshift("Start");
 
     // CREATE RATINGS ARRAY
 
     // GET USER'S MATCH HISTORY AND SORT BY DATE ASC
 
     const matchesSortedByDateAsc = responseData.sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
+      (a, b) => new Date(a.date) - new Date(b.date),
     );
 
     // GET START RATING AND ADD TO RATINGS ARRAY
@@ -24,10 +27,9 @@ fetch("http://localhost:4280/api/get_user_match_history")
     ratingsAdded = [];
 
     const startRatingValue = localStorage.getItem("start-rating");
-    const floatStartRatingValue = parseFloat(startRatingValue);
-    const firstMatchRating = parseFloat(matchesSortedByDateAsc[0].rating);
+    ratingsAdded.unshift(parseFloat(startRatingValue));
 
-    ratingsAdded.push(floatStartRatingValue + firstMatchRating);
+    const floatStartRatingValue = parseFloat(startRatingValue);
 
     // ADD MATCH HISTORY RATING ARRAY
 
@@ -110,7 +112,7 @@ fetch("http://localhost:4280/api/get_user_match_history")
     }
 
     const chartSubHeadingStat = document.querySelector(
-      "#chart-text-subheading"
+      "#chart-text-subheading",
     );
     chartSubHeadingStat.textContent =
       minusOrPlus +
@@ -227,14 +229,14 @@ fetch("http://localhost:4280/api/get_user_match_history")
     // CALCULATE PREVIOUS MONTH'S WINRATE AND CURRENT MONTH'S WINRATE
 
     const winrateCardMiniTrendIcon = document.querySelector(
-      "#winrateCardMiniTrendIcon"
+      "#winrateCardMiniTrendIcon",
     );
     const winRateThisMonthStat = document.querySelector(
-      "#winRateThisMonthStat"
+      "#winRateThisMonthStat",
     );
 
     const winrateCardTrendIcon = document.querySelector(
-      "#winrateCardTrendIcon"
+      "#winrateCardTrendIcon",
     );
 
     const winRateCard = document.querySelector(".winrate-card-positive");
@@ -289,7 +291,7 @@ fetch("http://localhost:4280/api/get_user_match_history")
     // WIN STREAK CARD
 
     const matchesSortedByDateDesc = responseData.sort(
-      (a, b) => new Date(b.date) - new Date(a.date)
+      (a, b) => new Date(b.date) - new Date(a.date),
     );
     let winStreak = 0;
     for (let match of matchesSortedByDateDesc) {
@@ -318,8 +320,12 @@ fetch("http://localhost:4280/api/get_user_match_history")
 
     const title = (tooltipItems) => {
       let firstIndex = tooltipItems[0];
-      let matchNumber = firstIndex.dataIndex + 1;
-      return "Match " + matchNumber;
+      let matchNumber = firstIndex.dataIndex;
+      if (matchNumber === 0) {
+        return "Start";
+      } else {
+        return "Match " + matchNumber;
+      }
     };
 
     const label = (tooltipItem) => {

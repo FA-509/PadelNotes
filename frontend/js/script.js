@@ -413,7 +413,6 @@ fetch("http://localhost:4280/api/get_user_match_history")
           ratingNumber.textContent = " -" + rating;
           ratingIcon.src = "images/trending-down.svg";
         }
-        ratingIcon.style.display = "none";
       } else if (result === "Draw") {
         resultCard.classList.add("draw-result-card");
         resultLabel.classList.add("draw-result");
@@ -423,7 +422,6 @@ fetch("http://localhost:4280/api/get_user_match_history")
           ratingNumber.textContent = rating;
           ratingIcon.src = "images/minus.svg";
         }
-        ratingIcon.style.display = "none";
       } else if (result === "Win") {
         resultCard.classList.add("win-result-card");
         resultLabel.classList.add("win-result");
@@ -433,7 +431,6 @@ fetch("http://localhost:4280/api/get_user_match_history")
           ratingNumber.textContent = " +" + rating;
           ratingIcon.src = "images/trending-up.svg";
         }
-        ratingIcon.style.display = "none";
       }
 
       resultLabel.textContent = result;
