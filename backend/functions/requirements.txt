@@ -5,5 +5,4 @@
 azure-functions
 azure-cosmos
 requests
-base64
 
