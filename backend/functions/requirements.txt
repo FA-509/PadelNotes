@@ -5,5 +5,3 @@
 azure-functions
 azure-cosmos
 requests
-
-
