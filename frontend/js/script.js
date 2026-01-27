@@ -242,7 +242,7 @@ importGameForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const formData = new FormData(importGameForm);
   const data = Object.fromEntries(formData);
-  fetch("http://localhost:4280/api/import_game", {
+  fetch("https://purple-sky-0eae4c803.6.azurestaticapps.net/api/import_game", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -261,7 +261,9 @@ importGameForm.addEventListener("submit", (event) => {
 
 const dataArray = [];
 
-fetch("http://localhost:4280/api/get_user_match_history")
+fetch(
+  "https://purple-sky-0eae4c803.6.azurestaticapps.net/api/get_user_match_history",
+)
   .then(function (response) {
     return response.json();
   })
@@ -310,13 +312,16 @@ fetch("http://localhost:4280/api/get_user_match_history")
     );
 
     regenerateChallengeBtn.addEventListener("click", (event) => {
-      fetch(`http://localhost:4280/api/generate_challenge`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      fetch(
+        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/generate_challenge`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: feedbackArray.join("\n") }),
         },
-        body: JSON.stringify({ content: feedbackArray.join("\n") }),
-      })
+      )
         .then(function (response) {
           return response.json();
         })
@@ -512,7 +517,9 @@ fetch("http://localhost:4280/api/get_user_match_history")
         ".win-result-card, .draw-result-card, .loss-result-card",
       );
       selectedMatchId = closestRow.dataset.matchId;
-      fetch(`http://localhost:4280/api/find_game_via_id?id=${selectedMatchId}`)
+      fetch(
+        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/find_game_via_id?id=${selectedMatchId}`,
+      )
         .then(function (response) {
           return response.json();
         })
@@ -716,7 +723,7 @@ fetch("http://localhost:4280/api/get_user_match_history")
 
       delMatchBtn.addEventListener("click", () => {
         fetch(
-          `http://localhost:4280/api/delete_game?id=${selectedMatchId}`,
+          `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/delete_game?id=${selectedMatchId}`,
           {},
         ).then(function () {
           window.location.reload();
@@ -735,13 +742,16 @@ fetch("http://localhost:4280/api/get_user_match_history")
       const formData = new FormData(editGameForm);
       const data = Object.fromEntries(formData);
 
-      fetch(`http://localhost:4280/api/edit_game?id=${selectedMatchId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      fetch(
+        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/edit_game?id=${selectedMatchId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         },
-        body: JSON.stringify(data),
-      }).then(function () {
+      ).then(function () {
         window.location.reload();
       });
     });

@@ -210,8 +210,12 @@
   box-shadow: 0 0 3px #fff3f3;
 }
 
-.winrate-card:hover {
+.winrate-card-positive:hover {
   box-shadow: 0 0 10px #d1fae5;
+}
+
+.winrate-card-negative:hover {
+  box-shadow: 0 0 10px #fff3f3;
 }
 
 .winrate-icon-box-win {
