@@ -1,5 +1,5 @@
 fetch(
-  "https://purple-sky-0eae4c803.6.azurestaticapps.net/get_user_match_history",
+  "https://purple-sky-0eae4c803.6.azurestaticapps.net/api/get_user_match_history",
 )
   .then(function (response) {
     return response.json();

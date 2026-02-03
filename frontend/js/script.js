@@ -313,7 +313,7 @@ fetch(
 
     regenerateChallengeBtn.addEventListener("click", (event) => {
       fetch(
-        `https://purple-sky-0eae4c803.6.azurestaticapps.net/generate_challenge`,
+        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/generate_challenge`,
         {
           method: "POST",
           headers: {
@@ -831,7 +831,7 @@ fetch(
 
     if (lastFiveMatchesArray.length > 0 && storedChallenge === null) {
       fetch(
-        `https://purple-sky-0eae4c803.6.azurestaticapps.net/generate_challenge`,
+        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/generate_challenge`,
         {
           method: "POST",
           headers: {
