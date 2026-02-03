@@ -242,7 +242,7 @@ importGameForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const formData = new FormData(importGameForm);
   const data = Object.fromEntries(formData);
-  fetch("https://purple-sky-0eae4c803.6.azurestaticapps.net/api/import_game", {
+  fetch("api/import_game", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -261,9 +261,7 @@ importGameForm.addEventListener("submit", (event) => {
 
 const dataArray = [];
 
-fetch(
-  "https://purple-sky-0eae4c803.6.azurestaticapps.net/api/get_user_match_history",
-)
+fetch("/api/get_user_match_history")
   .then(function (response) {
     return response.json();
   })
@@ -312,16 +310,13 @@ fetch(
     );
 
     regenerateChallengeBtn.addEventListener("click", (event) => {
-      fetch(
-        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/generate_challenge`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ content: feedbackArray.join("\n") }),
+      fetch(`/api/generate_challenge`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      )
+        body: JSON.stringify({ content: feedbackArray.join("\n") }),
+      })
         .then(function (response) {
           return response.json();
         })
@@ -517,9 +512,7 @@ fetch(
         ".win-result-card, .draw-result-card, .loss-result-card",
       );
       selectedMatchId = closestRow.dataset.matchId;
-      fetch(
-        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/find_game_via_id?id=${selectedMatchId}`,
-      )
+      fetch(`/api/find_game_via_id?id=${selectedMatchId}`)
         .then(function (response) {
           return response.json();
         })
@@ -722,10 +715,7 @@ fetch(
       const delMatchBtn = document.querySelector("#delMatchBtn");
 
       delMatchBtn.addEventListener("click", () => {
-        fetch(
-          `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/delete_game?id=${selectedMatchId}`,
-          {},
-        ).then(function () {
+        fetch(`api/delete_game?id=${selectedMatchId}`, {}).then(function () {
           // IF RECENT MATCHES IS EMPTY, DELETE CHALLENGE
 
           if (lastFiveMatchesArray.length <= 1) {
@@ -749,16 +739,13 @@ fetch(
       const formData = new FormData(editGameForm);
       const data = Object.fromEntries(formData);
 
-      fetch(
-        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/edit_game?id=${selectedMatchId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
+      fetch(`/api/edit_game?id=${selectedMatchId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      ).then(function () {
+        body: JSON.stringify(data),
+      }).then(function () {
         window.location.reload();
       });
     });
@@ -830,16 +817,13 @@ fetch(
     const aiCardBtnText = document.getElementById("aiCardBtnText");
 
     if (lastFiveMatchesArray.length > 0 && storedChallenge === null) {
-      fetch(
-        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/generate_challenge`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ content: feedbackArray.join("\n") }),
+      fetch(`/api/generate_challenge`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      )
+        body: JSON.stringify({ content: feedbackArray.join("\n") }),
+      })
         .then(function (response) {
           return response.json();
         })

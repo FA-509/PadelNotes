@@ -1,0 +1,27 @@
+.card-body {
+  width: 100%;
+  width: 500px;
+}
+
+.card-body p {
+  font-size: 15px;
+  font-weight: normal;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bolder;
+}
+
+.icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border-width: 1px;
+  background-color: #f3f4f6;
+}
+
+#signInBtn {
+  border-radius: 20px;
+  padding: 10px;
+}
