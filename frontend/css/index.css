@@ -270,6 +270,17 @@
   border-color: #ef4444;
 }
 
+#logoutBtn {
+  width: 50%;
+  background: linear-gradient(75deg, #ef4444 0%, #dc2626 100%) !important;
+  border-color: #ef4444;
+}
+
+#logoutBtn a {
+  text-decoration: none;
+  color: white;
+}
+
 #skipBtn {
   background: linear-gradient(75deg, #ef4444 0%, #dc2626 100%) !important;
   border-color: #ef4444;

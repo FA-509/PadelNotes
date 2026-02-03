@@ -53,7 +53,8 @@
         <button class="navbar-icon" data-bs-toggle="modal" data-bs-target="#settingsModal"><img src="images/settings icon.svg" width="21" height="21" alt="" class="d-inline-block me-2" id="settings-icon"></img></button>
         </div>
         <div class="user-icon">
-        <img src="images/user.svg" width="21" height="21" alt="" id="user-icon"></img>
+          <button class="navbar-icon" data-bs-toggle="modal" data-bs-target="#userModal"><img src="images/user.svg" width="21" height="21" alt="" id="user-icon"></img></button>
+
         </div>
       </div>
       </div>    
@@ -719,6 +720,21 @@
 </div>
 </div>
 </div>
+
+<!-- USER PANEL -->
+
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="user-modal-title">Account Menu</h1>
+      </div>
+      <div class="modal-footer d-flex">
+        <button type="button" id="logoutBtn" class="btn btn-primary w-100"><a href="http://localhost:4280/.auth/logout?post_logout_redirect_uri=/">Log out</a></button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- SETTINGS PANEL -->
 
