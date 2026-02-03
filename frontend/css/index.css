@@ -220,11 +220,57 @@
   gap: 13px;
 }
 
+.generate-challenge-btn {
+  background-color: #599df9;
+  border-radius: 16px;
+  color: #f4f9ff;
+  white-space: nowrap;
+  font-size: 16px;
+  padding: 10px;
+  padding-left: 24px;
+  padding-right: 24px;
+  border: solid;
+  border-width: 2px;
+  border-color: #88b7ff;
+  width: 50%;
+  margin-top: 20px;
+}
+
+.generate-challenge-btn:hover {
+  background-color: #8abfff;
+}
+
+.no-challenge-yet-container {
+  gap: 10px;
+}
+
+#noChallengeYetText {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+#importYourGamesText {
+  font-size: 15px;
+}
+
+.sparkles-icon {
+  border: solid;
+  border-radius: 60px;
+  padding: 10px;
+  border-color: #5ca2f9;
+  background-color: #7db5fa;
+}
+
 .modal-footer {
   gap: 1px;
 }
 
 #delMatchBtn {
+  background: linear-gradient(75deg, #ef4444 0%, #dc2626 100%) !important;
+  border-color: #ef4444;
+}
+
+#skipBtn {
   background: linear-gradient(75deg, #ef4444 0%, #dc2626 100%) !important;
   border-color: #ef4444;
 }

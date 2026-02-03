@@ -608,7 +608,8 @@
   font-weight: 300;
 }
 
-.card-body {
+.card-body,
+.ai-card-state {
   display: flex;
   flex-direction: column;
   gap: 13px;
@@ -653,6 +654,8 @@
   border: solid;
   border-width: 2px;
   border-color: #88b7ff;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .progress {
@@ -661,6 +664,7 @@
 
 .progress-bar {
   background-color: #ffffff;
+  margin-bottom: 40px;
 }
 
 .regenerate-challenge-btn:hover {
@@ -702,13 +706,14 @@
   border-width: 2px;
   box-shadow: 0 0 3px #4396ff;
   margin-bottom: 16px;
-  height: 420px;
+  height: auto;
 }
 
 .challenge-progress {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 15px;
 }
 
 .challenge-progress p {

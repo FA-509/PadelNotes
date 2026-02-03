@@ -242,7 +242,7 @@ importGameForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const formData = new FormData(importGameForm);
   const data = Object.fromEntries(formData);
-  fetch("https://purple-sky-0eae4c803.6.azurestaticapps.net/api/import_game", {
+  fetch("http://localhost:4280/api/import_game", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -261,9 +261,7 @@ importGameForm.addEventListener("submit", (event) => {
 
 const dataArray = [];
 
-fetch(
-  "https://purple-sky-0eae4c803.6.azurestaticapps.net/api/get_user_match_history",
-)
+fetch("http://localhost:4280/api/get_user_match_history")
   .then(function (response) {
     return response.json();
   })
@@ -312,16 +310,13 @@ fetch(
     );
 
     regenerateChallengeBtn.addEventListener("click", (event) => {
-      fetch(
-        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/generate_challenge`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ content: feedbackArray.join("\n") }),
+      fetch(`http://localhost:4280/api/generate_challenge`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      )
+        body: JSON.stringify({ content: feedbackArray.join("\n") }),
+      })
         .then(function (response) {
           return response.json();
         })
@@ -517,9 +512,7 @@ fetch(
         ".win-result-card, .draw-result-card, .loss-result-card",
       );
       selectedMatchId = closestRow.dataset.matchId;
-      fetch(
-        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/find_game_via_id?id=${selectedMatchId}`,
-      )
+      fetch(`http://localhost:4280/api/find_game_via_id?id=${selectedMatchId}`)
         .then(function (response) {
           return response.json();
         })
@@ -723,9 +716,16 @@ fetch(
 
       delMatchBtn.addEventListener("click", () => {
         fetch(
-          `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/delete_game?id=${selectedMatchId}`,
+          `http://localhost:4280/api/delete_game?id=${selectedMatchId}`,
           {},
         ).then(function () {
+          // IF RECENT MATCHES IS EMPTY, DELETE CHALLENGE
+
+          if (lastFiveMatchesArray.length <= 1) {
+            localStorage.removeItem("challenge");
+            localStorage.setItem("progressBar", "0%");
+            localStorage.setItem("progressCount", 0);
+          }
           window.location.reload();
         });
       });
@@ -742,16 +742,13 @@ fetch(
       const formData = new FormData(editGameForm);
       const data = Object.fromEntries(formData);
 
-      fetch(
-        `https://purple-sky-0eae4c803.6.azurestaticapps.net/api/edit_game?id=${selectedMatchId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
+      fetch(`http://localhost:4280/api/edit_game?id=${selectedMatchId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      ).then(function () {
+        body: JSON.stringify(data),
+      }).then(function () {
         window.location.reload();
       });
     });
@@ -761,11 +758,94 @@ fetch(
     // SAVE START RATING IN LOCAL STORAGE
 
     const settingsSaveBtn = document.getElementById("settingsSaveBtn");
+    const welcomeSaveBtn = document.getElementById("welcomeSaveBtn");
     const startRatingInput = document.getElementById("startRatingInput");
+    const welcomeStartRatingInput = document.getElementById(
+      "welcomeStartRatingInput",
+    );
 
-    settingsSaveBtn.addEventListener("click", () => {
-      startRatingValue = startRatingInput.value;
+    welcomeSaveBtn.addEventListener("click", () => {
+      const startRatingValue = welcomeStartRatingInput.value;
       localStorage.setItem("start-rating", startRatingValue);
       window.location.reload();
     });
+
+    settingsSaveBtn.addEventListener("click", () => {
+      const startRatingValue = startRatingInput.value;
+      localStorage.setItem("start-rating", startRatingValue);
+      window.location.reload();
+    });
+
+    // IF WELCOME MESSAGE SKIPPED
+
+    const skipBtn = document.getElementById("skipBtn");
+
+    skipBtn.addEventListener("click", () => {
+      localStorage.setItem("skipFlag", "true");
+    });
+
+    // CHECK IF START RATING EXISTS AND IF SKIP FLAG IS FALSE
+
+    localStartRating = localStorage.getItem("start-rating");
+    startRatingFloat = parseFloat(localStartRating);
+
+    if (
+      Number.isFinite(startRatingFloat) === false &&
+      localStorage.getItem("skipFlag") !== "true"
+    ) {
+      const welcomeModal = new bootstrap.Modal(
+        document.getElementById("welcomeModal"),
+      );
+      welcomeModal.show();
+    }
+
+    // EMPTY OR POPULATED AI STATE
+
+    const emptyState = document.getElementById("emptyAiState");
+    const populatedState = document.getElementById("populatedAiState");
+
+    const storedChallenge = localStorage.getItem("challenge");
+
+    if (storedChallenge === null) {
+      emptyState.style.display = "block";
+      populatedState.style.display = "none";
+    } else {
+      emptyState.style.display = "none";
+      populatedState.style.display = "block";
+    }
+
+    // GENERATE CHALLENGE IF MATCH ARRAY IS 0 AND CHALLENGE STROAGE IS NULL
+
+    const aiCardBtn = document.getElementById("aiCardBtn");
+    const aiCardBtnText = document.getElementById("aiCardBtnText");
+
+    if (lastFiveMatchesArray.length > 0 && storedChallenge === null) {
+      fetch(`http://localhost:4280/api/generate_challenge`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: feedbackArray.join("\n") }),
+      })
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (response) {
+          // // STORE CHALLENGE INTO LOCAL STORAGE AND UPDATE AI CARD
+          localStorage.setItem("challenge", JSON.stringify(response));
+
+          // RESET MATCH PROGRESS TO ZERO
+
+          let count = 0;
+          localStorage.setItem("progressCount", count);
+          localStorage.setItem("progressBar", "0%");
+
+          progressBarStat.style.width = "0%";
+          progressCounterStat.innerText =
+            localStorage.getItem("progressCount") + "/3 Matches";
+          emptyState.style.display = "none";
+          populatedState.style.display = "block";
+          updateAICard(response);
+        });
+    }
   });

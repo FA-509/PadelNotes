@@ -1,6 +1,4 @@
-fetch(
-  "https://purple-sky-0eae4c803.6.azurestaticapps.net/api/get_user_match_history",
-)
+fetch("http://localhost:4280/api/get_user_match_history")
   .then(function (response) {
     return response.json();
   })
@@ -64,6 +62,12 @@ fetch(
     lastRatingOfArray = ratingsAdded[lastIndex].toFixed(2);
 
     // RATING IN CHART HEADING
+
+    // CHECK START RATING EXISTS
+
+    if (Number.isFinite(Number(lastRatingOfArray)) !== true) {
+      lastRatingOfArray = "Set Start Rating";
+    }
 
     const chartTextHeading = document.querySelector("#chartTextHeading");
     chartTextHeading.textContent = lastRatingOfArray;
@@ -170,10 +174,16 @@ fetch(
       }
     }
 
-    const winrateStat = (w / (w + l)) * 100;
+    let winrateStat = (w / (w + l)) * 100;
 
     const winrateNumberCard = document.querySelector(".winrate-number");
-    winrateNumberCard.textContent = Math.round(winrateStat) + "%";
+
+    if (Number.isFinite(winrateStat) !== true) {
+      winrateStat = 0;
+      winrateNumberCard.textContent = "-";
+    } else {
+      winrateNumberCard.textContent = Math.round(winrateStat) + "%";
+    }
 
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth() + 1;

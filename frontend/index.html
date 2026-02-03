@@ -63,7 +63,7 @@
 <div class="container mt-4">
     <div class="row justify-content-between">
       <div class="col">
-        <h1 style="font-size: 22px;">Welcome back, Leo! 👋</h1>
+        <h1 style="font-size: 22px;">Welcome 👋</h1>
         <p style="font-weight: 250; color: #45546c;">Here's your performance overview</p>
       </div>
             <div class="col-auto" id="log-new-match-container">
@@ -71,6 +71,32 @@
       </div>
     </div>
     </div>
+
+    <!-- WELCOME TO PADELNOTES MODAL -->
+<div class="modal" id="welcomeModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Welcome to PadelNotes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Add your start rating to get started. <br> <br> You can change it anytime in Settings.</p>
+                      <div>
+                                <span class="settings-subtitle">Start Rating</span>
+                <input class="settings-startrating-input w-100" id="welcomeStartRatingInput" type="number" placeholder="0" />
+                </div>
+      </div>
+      <div class="modal-footer">
+        <button id="skipBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Skip</button>
+        <button id="welcomeSaveBtn" type="button" class="btn btn-primary">Save Rating</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 
 
 <!-- EDIT GAME FORM-->
@@ -299,7 +325,7 @@
           <div class="import-game-left">
             <img src="images/blue-trophy.svg" width="50px" height="50px" alt="" id="log-new-match-icon">
         <div>
-        <h1 class="modal-title fs-5" id="modal-title">Log New Match</h1>
+        <h1 class="modal-title fs-5" id="modal-title">Log Match</h1>
         <p id="modal-sub-title">Enter match details and scores to track your progress</p>
         </div>
         </div>
@@ -566,7 +592,9 @@
 </div>
 </div>
 
-<!-- AI CARD AND CHART CARD -->
+
+
+<!-- AI CARD -->
 
 <div class="container">
 <div class="row">
@@ -577,6 +605,22 @@
          <img src="images/sparkles.svg" width="14" height="14" alt="" id="sparkles-icon"></img>
          <p>AI CHALLENGE</p>
     </div>
+
+
+    <!-- EMPTY AI STATE -->
+     <div class="ai-card-state" id="emptyAiState">
+      <div class="no-challenge-yet-container d-flex flex-column justify-content-center align-items-center">
+      <img class="sparkles-icon " src="images/sparkle.svg" width="50" height="50" alt=""> 
+      <span id="noChallengeYetText" class="text-center">No Challenge Yet</span>
+      <span id="importYourGamesText" class="text-center"><strong>Log 1 match</strong> to unlock your first AI challenge.</span>
+      <button type="button" id="aiCardBtn" data-bs-toggle="modal" data-bs-target="#importGameForm" class="generate-challenge-btn"> <span id="aiCardBtnText">&nbsp Log New Match</span></button>
+      </div>
+    </div>
+
+
+
+    <!-- POPULATED AI STATE -->
+     <div class="ai-card-state" id="populatedAiState">
     <div class="sub-title">
     <h4 id="sub-heading"></h4>
     <p id="whyitmatters-text"></p>
@@ -597,8 +641,12 @@
 </div>
     
     <button type="button" class="regenerate-challenge-btn"><img src="images/refresh-cw.svg" width="14" height="14" alt="" id="sparkles-icon"></img><span>&nbsp Regenerate Challenge</span></button>
+</div>
   </div>
   </div>
+
+
+  <!-- CHART CARD -->
 
        <div class="chart-card">
   <div class="card-body">
