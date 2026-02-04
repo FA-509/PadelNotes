@@ -1,18 +1,18 @@
 {
   "navigationFallback": {
-    "rewrite": "/sign-in.html"
+    "rewrite": "/index.html"
   },
   "routes": [
     {
-      "route": "/sign-in.html",
+      "route": "/index.html",
       "allowedRoles": ["anonymous"]
     },
     {
-      "route": "/livedemo.html",
+      "route": "/live-demo",
       "allowedRoles": ["anonymous"]
     },
     {
-      "route": "/dashboard.html",
+      "route": "/dashboard",
       "allowedRoles": ["onlyme"]
     }
   ]
