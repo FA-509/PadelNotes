@@ -8,6 +8,10 @@
       "allowedRoles": ["anonymous"]
     },
     {
+      "route": "/livedemo.html",
+      "allowedRoles": ["anonymous"]
+    },
+    {
       "route": "/dashboard.html",
       "allowedRoles": ["onlyme"]
     }
