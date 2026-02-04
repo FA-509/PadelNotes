@@ -1,0 +1,44 @@
+.recent-matches-card {
+  pointer-events: none;
+}
+
+#log-new-match-container {
+  pointer-events: none;
+}
+
+#demoModeBadge {
+  background: linear-gradient(75deg, #3b82f6 0%, #60a5fa 100%);
+  transform: translateY(1.5px);
+}
+
+.log-new-match-btn-demo {
+  background-color: #e9eef7;
+  border-radius: 16px;
+  color: #ffffff;
+  white-space: nowrap;
+  padding: 10px;
+  padding-left: 24px;
+  padding-right: 24px;
+  display: flex;
+  border: solid;
+  border-color: #ffffff;
+}
+
+.user-icon-demo,
+.settings-icon-demo {
+  background-color: #fbfcff;
+  height: 48px;
+  width: 48px;
+  border-color: #fbfcff;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.1;
+}
+
+navbar-brand {
+  pointer-events: none;
+}
