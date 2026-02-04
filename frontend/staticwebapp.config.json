@@ -1,17 +1,15 @@
 {
   "navigationFallback": {
-    "rewrite": "/index.html"
+    "rewrite": "/sign-in.html"
   },
   "routes": [
     {
-      "route": "/*",
+      "route": "/sign-in.html",
+      "allowedRoles": ["anonymous"]
+    },
+    {
+      "route": "/dashboard.html",
       "allowedRoles": ["onlyme"]
     }
-  ],
-  "responseOverrides": {
-    "401": {
-      "statusCode": 302,
-      "redirect": "/.auth/login/aad"
-    }
-  }
+  ]
 }
