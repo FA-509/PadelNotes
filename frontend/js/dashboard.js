@@ -37,13 +37,13 @@ function matchProgressIncrease() {
 
   if (newCount == 1) {
     localStorage.setItem("progressBar", "33%");
-    progressBarStat.style.width = localStorage.getItem("progressBar");
+    progressBarStat.style.width = "33%";
   } else if (newCount == 2) {
     localStorage.setItem("progressBar", "66%");
-    progressBarStat.style.width = localStorage.getItem("progressBar");
+    progressBarStat.style.width = "66%";
   } else if (newCount == 3) {
     localStorage.setItem("progressBar", "100%");
-    progressBarStat.style.width = localStorage.getItem("progressBar");
+    progressBarStat.style.width = "100%";
   }
 }
 
