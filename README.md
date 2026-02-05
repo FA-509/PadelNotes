@@ -27,7 +27,7 @@ Full CRUD + AI challenge generation is restricted to authenticated users.
 
 ## 🧱 Architecture
 
-<img width="70%" alt="architecture diagram" src="https://github.com/FA-509/PadelNotes/blob/main/frontend/images/PadelNotes%20Architecture%20Diagram.png"/>
+<img width="80%" alt="architecture diagram" src="https://github.com/FA-509/PadelNotes/blob/main/frontend/images/PadelNotes%20Architecture%20Diagram.png"/>
 
 ## ☁️ Services Used
 
