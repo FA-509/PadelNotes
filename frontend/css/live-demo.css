@@ -42,3 +42,7 @@
 navbar-brand {
   pointer-events: none;
 }
+
+.progress-bar {
+  width: 30%;
+}

@@ -272,9 +272,9 @@ fetch("/api/get_user_match_history")
     winrateDifference = currentMonthWinrateStat - previousMonthWinrateStat;
 
     if (Math.sign(winrateDifference) === -1) {
-      winrateCardMiniTrendIcon.src = "images/trending-down.svg";
+      winrateCardMiniTrendIcon.src = "/images/trending-down.svg";
       winRateThisMonthStat.style.color = "red";
-      winrateCardTrendIcon.src = "images/trending-down.svg";
+      winrateCardTrendIcon.src = "/images/trending-down.svg";
       winRateCard.classList.remove("winrate-card-positive");
       winRateCard.classList.add("winrate-card-negative");
       winRateIconBoxCard.classList.remove("winrate-icon-box-win");
@@ -282,9 +282,9 @@ fetch("/api/get_user_match_history")
     }
 
     if (Math.sign(winrateDifference) === 1) {
-      winrateCardMiniTrendIcon.src = "images/trending-up.svg";
+      winrateCardMiniTrendIcon.src = "/images/trending-up.svg";
       winRateThisMonthStat.style.color = "#009866";
-      winrateCardTrendIcon.src = "images/trending-up.svg";
+      winrateCardTrendIcon.src = "/images/trending-up.svg";
       winRateCard.classList.remove("winrate-card-negative");
       winRateCard.classList.add("winrate-card-positive");
       winRateIconBoxCard.classList.remove("winrate-icon-box-loss");

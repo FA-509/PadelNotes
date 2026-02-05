@@ -197,7 +197,7 @@ matchResult.addEventListener("change", () => {
     resultCard.classList.add("loss-result-card");
     resultPill.classList.add("loss-result");
     resultPill.textContent = "Loss";
-    previewCardRatingIcon.src = "images/trending-down.svg";
+    previewCardRatingIcon.src = "/images/trending-down.svg";
     previewCardRating.textContent = "-" + inputRating.value;
     previewCardRatingContainer.classList.add("loss-rating");
     previewCardRatingIcon.style.display = "inline";
@@ -207,7 +207,7 @@ matchResult.addEventListener("change", () => {
     resultCard.classList.add("draw-result-card");
     resultPill.classList.add("draw-result");
     resultPill.textContent = "Draw";
-    previewCardRatingIcon.src = "images/minus.svg";
+    previewCardRatingIcon.src = "/images/minus.svg";
     previewCardRating.textContent = "" + inputRating.value;
     previewCardRatingContainer.classList.add("draw-rating");
     previewCardRatingIcon.style.display = "inline";
@@ -218,7 +218,7 @@ matchResult.addEventListener("change", () => {
     resultPill.classList.add("win-result");
     resultPill.textContent = "Win";
     previewCardRating.textContent = "+" + inputRating.value;
-    previewCardRatingIcon.src = "images/trending-up.svg";
+    previewCardRatingIcon.src = "/images/trending-up.svg";
     previewCardRatingContainer.classList.add("win-rating");
     previewCardRatingIcon.style.display = "inline";
     checkIfRatingInputMissing();
@@ -411,7 +411,7 @@ fetch("/api/get_user_match_history")
         ratingResult.classList.add("loss-rating");
         if (matchType != "Friendly") {
           ratingNumber.textContent = " -" + rating;
-          ratingIcon.src = "images/trending-down.svg";
+          ratingIcon.src = "/images/trending-down.svg";
         }
       } else if (result === "Draw") {
         resultCard.classList.add("draw-result-card");
@@ -420,7 +420,7 @@ fetch("/api/get_user_match_history")
 
         if (matchType != "Friendly") {
           ratingNumber.textContent = rating;
-          ratingIcon.src = "images/minus.svg";
+          ratingIcon.src = "/images/minus.svg";
         }
       } else if (result === "Win") {
         resultCard.classList.add("win-result-card");
@@ -429,7 +429,7 @@ fetch("/api/get_user_match_history")
 
         if (matchType != "Friendly") {
           ratingNumber.textContent = " +" + rating;
-          ratingIcon.src = "images/trending-up.svg";
+          ratingIcon.src = "/images/trending-up.svg";
         }
       }
 
@@ -568,7 +568,7 @@ fetch("/api/get_user_match_history")
               editResultCard.classList.add("loss-result-card");
               editResultPill.classList.add("loss-result");
               editResultPill.textContent = "Loss";
-              editPreviewCardRatingIcon.src = "images/trending-down.svg";
+              editPreviewCardRatingIcon.src = "/images/trending-down.svg";
               editPreviewCardRating.textContent = "-" + editRating.value;
               editPreviewCardRatingContainer.classList.add("loss-rating");
               editPreviewCardRatingIcon.style.display = "inline";
@@ -578,7 +578,7 @@ fetch("/api/get_user_match_history")
               editResultCard.classList.add("draw-result-card");
               editResultPill.classList.add("draw-result");
               editResultPill.textContent = "Draw";
-              editPreviewCardRatingIcon.src = "images/minus.svg";
+              editPreviewCardRatingIcon.src = "/images/minus.svg";
               editPreviewCardRating.textContent = "" + editRating.value;
               editPreviewCardRatingContainer.classList.add("draw-rating");
               editPreviewCardRatingIcon.style.display = "inline";
@@ -589,7 +589,7 @@ fetch("/api/get_user_match_history")
               editResultPill.classList.add("win-result");
               editResultPill.textContent = "Win";
               editPreviewCardRating.textContent = "+" + editRating.value;
-              editPreviewCardRatingIcon.src = "images/trending-up.svg";
+              editPreviewCardRatingIcon.src = "/images/trending-up.svg";
               editPreviewCardRatingContainer.classList.add("win-rating");
               editPreviewCardRatingIcon.style.display = "inline";
               checkIfFriendlyInEditForm();
