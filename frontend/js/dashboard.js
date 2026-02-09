@@ -157,15 +157,32 @@ inputRating.addEventListener("input", () => {
 // CHECK MATCH TYPE
 
 const matchTypeInput = document.querySelector("#matchTypeInput");
+const ratingInputContainers = document.querySelectorAll(
+  "#ratingInputContainer",
+);
+const rowFive = document.querySelectorAll(".row-5");
 
 matchTypeInput.addEventListener("change", () => {
   if (matchTypeInput.value === "Friendly") {
     previewCardRating.style.display = "none";
     previewCardRatingIcon.style.display = "none";
+    ratingInputContainer.style.display = "none";
+    for (let input of ratingInputContainers) {
+      input.style.display = "none";
+    }
+    for (let row of rowFive) {
+      row.style.gridTemplateColumns = "1fr 1fr 1fr 1fr";
+    }
   }
   if (matchTypeInput.value === "Competitive") {
-    previewCardRating.style.display = "inline";
-    previewCardRatingIcon.style.display = "inline";
+    previewCardRating.style.display = "";
+    previewCardRatingIcon.style.display = "";
+    for (let input of ratingInputContainers) {
+      input.style.display = "";
+    }
+    for (let row of rowFive) {
+      row.style.gridTemplateColumns = "1fr 1fr 1fr 1fr 1fr";
+    }
     checkIfRatingInputMissing();
     createScoreSetPreview();
   }
@@ -240,9 +257,21 @@ const importGameForm = document.getElementById("importgame-form");
 
 importGameForm.addEventListener("submit", (event) => {
   event.preventDefault();
+
+  const ratingInputContainers = document.querySelectorAll(
+    "#ratingInputContainer",
+  );
+
+  for (let container of ratingInputContainers) {
+    if (container.style.display === "none") {
+      inputRating.removeAttribute("required");
+      inputRating.value = "";
+    }
+  }
+
   const formData = new FormData(importGameForm);
   const data = Object.fromEntries(formData);
-  fetch("api/import_game", {
+  fetch("/api/import_game", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -495,13 +524,32 @@ fetch("/api/get_user_match_history")
     }
 
     // CHECK IF FRIENDLY MATCH TYPE IN EDIT FORM
+
+    const ratingInputContainers = document.querySelectorAll(
+      "#ratingInputContainer",
+    );
+    const rowFive = document.querySelectorAll(".row-5");
+
     function checkIfFriendlyInEditForm() {
       if (editMatchType.value === "Friendly") {
         editPreviewCardRating.style.display = "none";
         editPreviewCardRatingIcon.style.display = "none";
-      } else if (editMatchType.value === "Competitive") {
-        editPreviewCardRating.style.display = "inline";
-        editPreviewCardRatingIcon.style.display = "inline";
+        for (let input of ratingInputContainers) {
+          input.style.display = "none";
+        }
+        for (let row of rowFive) {
+          row.style.gridTemplateColumns = "1fr 1fr 1fr 1fr";
+        }
+      }
+      if (editMatchType.value === "Competitive") {
+        editPreviewCardRating.style.display = "";
+        editPreviewCardRatingIcon.style.display = "";
+        for (let input of ratingInputContainers) {
+          input.style.display = "";
+        }
+        for (let row of rowFive) {
+          row.style.gridTemplateColumns = "1fr 1fr 1fr 1fr 1fr";
+        }
       }
     }
 
@@ -715,7 +763,7 @@ fetch("/api/get_user_match_history")
       const delMatchBtn = document.querySelector("#delMatchBtn");
 
       delMatchBtn.addEventListener("click", () => {
-        fetch(`api/delete_game?id=${selectedMatchId}`, {}).then(function () {
+        fetch(`/api/delete_game?id=${selectedMatchId}`).then(function () {
           // IF RECENT MATCHES IS EMPTY, DELETE CHALLENGE
 
           if (lastFiveMatchesArray.length <= 1) {
@@ -733,8 +781,6 @@ fetch("/api/get_user_match_history")
     const editGameForm = document.getElementById("editgame-form");
 
     editGameForm.addEventListener("submit", (event) => {
-      console.countReset("edit form submit handler fired");
-
       event.preventDefault();
       const formData = new FormData(editGameForm);
       const data = Object.fromEntries(formData);

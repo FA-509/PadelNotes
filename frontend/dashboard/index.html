@@ -130,7 +130,7 @@
         <img src="/images/calendar-grey.svg" width="14px" height="14px" alt="">
         <span class="form-heading">DATE</span>
         </div>
-        <input id="editDateInput" class="editgame-input" name="date" type="date">
+        <input id="editDateInput" class="editgame-input" name="date" type="date" required>
         </div>
 
 
@@ -140,13 +140,8 @@
         <img src="/images/clock.svg" width="14px" height="14px" alt="">
         <span class="form-heading">TIME</span>
         </div>
-        <input id="editTimeInput" class="editgame-input" name="time" type="time">
+        <input id="editTimeInput" class="editgame-input" name="time" type="time" required>
         </div>
-
-
-
-
-
 
         <div class="input-container">
                                         <div class="duration-title">
@@ -166,7 +161,7 @@
         <img src="/images/map-pin.svg" width="14px" height="14px" alt="">
         <span class="form-heading">LOCATION</span>
         </div>
-        <input id="editLocationInput" class="editgame-input" name="location" type="text" placeholder="London">
+        <input id="editLocationInput" class="editgame-input" name="location" required type="text" placeholder="London" maxlength="40">
         </div>
         </div>
 
@@ -176,7 +171,7 @@
         <img src="/images/grey-users.svg" width="14px" height="14px" alt="">
         <span class="form-heading">MY TEAM</span>
         </div>
-        <input id="editMyTeamInput" class="editgame-input" name="myTeam" type="text" placeholder="Smith & Jones">
+        <input id="editMyTeamInput" class="editgame-input" name="myTeam" type="text" placeholder="Smith & Jones" maxlength="40" required>
         </div>
 
 
@@ -185,7 +180,7 @@
         <img src="/images/shield.svg" width="14px" height="14px" alt="">
         <span class="form-heading">OPPONENTS</span>
         </div>
-        <input id="editMyOpponentsInput" class="editgame-input" name="myOpponents" type="text" placeholder="Jack & Lee">
+        <input id="editMyOpponentsInput" class="editgame-input" name="myOpponents" type="text" placeholder="Jack & Lee" maxlength="40" required>
         </div>
 
         <div class="input-container">
@@ -199,12 +194,12 @@
         </select>
         </div>
 
-        <div class="input-container">
+        <div class="input-container" id="ratingInputContainer">
                 <div class="rating-title">
         <img src="/images/trending-up-down.svg" width="14px" height="14px" alt="">
         <span class="form-heading">RATING</span>
         </div>
-        <input id="editInputRating" class="editgame-input" name="rating" type="text" placeholder="0.04">
+        <input id="editInputRating" class="editgame-input" name="rating" required type="number" step="0.01" placeholder="0.04">
         </div>
 
                 <div class="input-container">
@@ -231,17 +226,17 @@
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores">SET 1</span>
-                <input name="myTeamSet1" id="editMyTeamSet1" class="editgame-input-scores" type="number" />
+                <input name="myTeamSet1" id="editMyTeamSet1" class="editgame-input-scores" type="number" required/>
                 </div>
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores">SET 2</span>
-                <input name="myTeamSet2" id="editMyTeamSet2" class="editgame-input-scores" type="number" />
+                <input name="myTeamSet2" id="editMyTeamSet2" class="editgame-input-scores" type="number" required />
                 </div>
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores">SET 3</span>
-                <input name="myTeamSet3" id="editMyTeamSet3" class="editgame-input-scores" type="number" />
+                <input name="myTeamSet3" id="editMyTeamSet3" class="editgame-input-scores" type="number" required />
                 </div>
                 </div>
 
@@ -253,17 +248,17 @@
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores-hidden">SET 1</span>
-                <input name="myOpponentsSet1" id="editMyOpponentsSet1" class="editgame-input-scores" type="number"  />
+                <input name="myOpponentsSet1" id="editMyOpponentsSet1" class="editgame-input-scores" type="number" required/>
                 </div>
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores-hidden">SET 2</span>
-                <input name="myOpponentsSet2" id="editMyOpponentsSet2" class="editgame-input-scores" type="number"  />
+                <input name="myOpponentsSet2" id="editMyOpponentsSet2" class="editgame-input-scores" type="number" required/>
                 </div>
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores-hidden">SET 3</span>
-                <input name="myOpponentsSet3" id="editMyOpponentsSet3" class="editgame-input-scores" type="number" />
+                <input name="myOpponentsSet3" id="editMyOpponentsSet3" class="editgame-input-scores" type="number" required/>
                 </div>
                 </div>
               </div>
@@ -297,7 +292,7 @@
 
     <p class="sub-titles">HOW DID THE MATCH GO?</p>
 
-    <textarea class="feedback-input-text" name="userFeedback" id="editUserFeedback" placeholder="Add details on what went well and what didn’t. This helps the AI generate targeted challenges to improve your game."></textarea>
+    <textarea class="feedback-input-text" name="userFeedback" maxlength="250" id="editUserFeedback" placeholder="Add details on what went well and what didn’t. This helps the AI generate targeted challenges to improve your game." required></textarea>
 
 
   </div>
@@ -344,7 +339,7 @@
         <img src="/images/calendar-grey.svg" width="14px" height="14px" alt="">
         <span class="form-heading">DATE</span>
         </div>
-        <input id="dateInput" class="importgame-input" name="date" type="date">
+        <input id="dateInput" class="importgame-input" name="date" type="date" required>
         </div>
 
 
@@ -354,7 +349,7 @@
         <img src="/images/clock.svg" width="14px" height="14px" alt="">
         <span class="form-heading">TIME</span>
         </div>
-        <input class="importgame-input" name="time" type="time">
+        <input class="importgame-input" name="time" type="time" required>
         </div>
 
 
@@ -376,7 +371,7 @@
         <img src="/images/map-pin.svg" width="14px" height="14px" alt="">
         <span class="form-heading">LOCATION</span>
         </div>
-        <input class="importgame-input" name="location" type="text" placeholder="London">
+        <input class="importgame-input" name="location" type="text" id="locationInput" placeholder="London" maxlength="40"  required>
         </div>
         </div>
 
@@ -386,7 +381,7 @@
         <img src="/images/grey-users.svg" width="14px" height="14px" alt="">
         <span class="form-heading">MY TEAM</span>
         </div>
-        <input id="myTeam" class="importgame-input" name="myTeam" type="text" placeholder="Smith & Jones">
+        <input id="myTeam" class="importgame-input" name="myTeam" maxlength="40" type="text" required placeholder="Smith & Jones">
         </div>
 
 
@@ -395,7 +390,7 @@
         <img src="/images/shield.svg" width="14px" height="14px" alt="">
         <span class="form-heading">OPPONENTS</span>
         </div>
-        <input id="myOpponents" class="importgame-input" name="myOpponents" type="text" placeholder="Jack & Lee">
+        <input id="myOpponents" class="importgame-input" name="myOpponents" type="text" maxlength="40" placeholder="Jack & Lee" required>
         </div>
 
         <div class="input-container">
@@ -403,18 +398,18 @@
         <img src="/images/medal.svg" width="14px" height="14px" alt="">
         <span class="form-heading">MATCH TYPE</span>
                         </div>
-        <select id="matchTypeInput" class="importgame-input" name="matchType" type="text">
-                  <option value="Friendly">Friendly</option>
-          <option value="Competitive">Competitive</option>
+        <select id="matchTypeInput" class="importgame-input" name="matchType" type="text">       
+          <option selected="selected" value="Competitive">Competitive</option>
+          <option value="Friendly">Friendly</option>
         </select>
         </div>
 
-        <div class="input-container">
+        <div class="input-container" id="ratingInputContainer">
                 <div class="rating-title">
         <img src="/images/trending-up-down.svg" width="14px" height="14px" alt="">
-        <span class="form-heading">RATING</span>
+        <span class="form-heading" id>RATING</span>
         </div>
-        <input id="inputRating" class="importgame-input" name="rating" type="text" placeholder="0.04">
+        <input id="inputRating" class="importgame-input" name="rating" type="number" step="0.01" placeholder="0.04" required>
         </div>
 
                 <div class="input-container">
@@ -446,17 +441,17 @@
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores">SET 1</span>
-                <input name="myTeamSet1" id="myTeamSet1" class="importgame-input-scores" type="number" />
+                <input name="myTeamSet1" id="myTeamSet1" class="importgame-input-scores" type="number" required/>
                 </div>
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores">SET 2</span>
-                <input name="myTeamSet2" id="myTeamSet2" class="importgame-input-scores" type="number" />
+                <input name="myTeamSet2" id="myTeamSet2" class="importgame-input-scores" type="number" required />
                 </div>
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores">SET 3</span>
-                <input name="myTeamSet3" id="myTeamSet3" class="importgame-input-scores" type="number" />
+                <input name="myTeamSet3" id="myTeamSet3" class="importgame-input-scores" type="number" required />
                 </div>
                 </div>
 
@@ -468,17 +463,17 @@
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores-hidden">SET 1</span>
-                <input name="myOpponentsSet1" id="myOpponentsSet1" class="importgame-input-scores" type="number"  />
+                <input name="myOpponentsSet1" id="myOpponentsSet1" class="importgame-input-scores" type="number" required  />
                 </div>
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores-hidden">SET 2</span>
-                <input name="myOpponentsSet2" id="myOpponentsSet2" class="importgame-input-scores" type="number"  />
+                <input name="myOpponentsSet2" id="myOpponentsSet2" class="importgame-input-scores" type="number" required />
                 </div>
 
                 <div class="input-container-scoreboard">
                                 <span class="form-heading-scores-hidden">SET 3</span>
-                <input name="myOpponentsSet3" id="myOpponentsSet3" class="importgame-input-scores" type="number" />
+                <input name="myOpponentsSet3" id="myOpponentsSet3" class="importgame-input-scores" type="number" required />
                 </div>
                 </div>
               </div>
@@ -510,7 +505,7 @@
 
     <p class="sub-titles">HOW DID THE MATCH GO?</p>
 
-    <textarea class="feedback-input-text" name="userFeedback" id="userFeedback" placeholder="Add details on what went well and what didn’t. This helps the AI generate targeted challenges to improve your game."></textarea>
+    <textarea class="feedback-input-text" name="userFeedback" id="userFeedback" maxlength="250" placeholder="Add details on what went well and what didn’t. This helps the AI generate targeted challenges to improve your game." required></textarea>
 
       </div>
 
@@ -767,4 +762,5 @@
      <script src="/js/dashboard.js"></script>
   </body>
 </html>
+
 
